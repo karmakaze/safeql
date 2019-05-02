@@ -1,6 +1,6 @@
 package org.keithkim.typeql;
 
-public class Table<T extends Entity> extends TableExpr {
+public class Table<T extends Entity> extends SqlAliasExpr {
     public final Class<T> tableClass;
 
     public Table(Class<T> tableClass) {
@@ -8,7 +8,7 @@ public class Table<T extends Entity> extends TableExpr {
     }
 
     public Table(Class<T> tableClass, String alias) {
-        super(tableClass.getSimpleName().toLowerCase(), alias);
+        super(new RawSqlExpr(tableClass.getSimpleName().toLowerCase()), alias);
         this.tableClass = tableClass;
     }
 }

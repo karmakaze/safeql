@@ -1,7 +1,7 @@
 package org.keithkim.typeql;
 
 public class Cond {
-    public static class EqualCol<L extends Entity, R extends Entity, T> implements SqlExpr {
+    public static class EqualCol<L extends Entity, R extends Entity, T> extends SqlExpr {
         public final Col<L, T> lCol;
         public final Col<R, T> rCol;
 

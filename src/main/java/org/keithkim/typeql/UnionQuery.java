@@ -2,7 +2,11 @@ package org.keithkim.typeql;
 
 import com.google.common.base.Joiner;
 
-public class UnionQuery implements SqlExpr {
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+public class UnionQuery extends SqlExpr {
     private final Type type;
     private final SelectQuery[] selectQueries;
 
@@ -18,6 +22,14 @@ public class UnionQuery implements SqlExpr {
     public String sql() {
         String joiner = String.format(" %s ", type.name().replace("_", " "));
         return Joiner.on(joiner).join(selectQueries);
+    }
+
+    public Map<String, Optional<?>> params() {
+        Map<String, Optional<?>> params = new HashMap<>();
+        for (SelectQuery q : selectQueries) {
+            params.putAll(q.params());
+        }
+        return params;
     }
 
     public String toString() {

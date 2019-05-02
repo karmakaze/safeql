@@ -1,5 +1,6 @@
 package org.keithkim.typeql;
 
+import com.google.common.collect.ImmutableSet;
 import org.junit.jupiter.api.Test;
 import org.keithkim.typeql.UnionQuery.Type;
 
@@ -54,5 +55,22 @@ public class UnionQueryTest {
         UnionQuery unionQuery = new UnionQuery(new SelectQuery("SELECT 1"),
                 new SelectQuery("SELECT 2"), new SelectQuery("SELECT 3"));
         assertEquals("SELECT 1 UNION SELECT 2 UNION SELECT 3", unionQuery.sql());
+    }
+
+    @Test
+    void missingBindVars() {
+        UnionQuery unionQuery = new UnionQuery(new SelectQuery("SELECT :v1"),
+                new SelectQuery("SELECT :v2"));
+        assertEquals("SELECT :v1 UNION SELECT :v2", unionQuery.sql());
+        assertEquals(ImmutableSet.of("v1", "v2"), unionQuery.missingParams());
+    }
+
+    @Test
+    void missingSomeBindVars() {
+        UnionQuery unionQuery = new UnionQuery(new SelectQuery("SELECT :v1"),
+                new SelectQuery("SELECT :v2"));
+        unionQuery.bind("v1", "value 1");
+        assertEquals("SELECT :v1 UNION SELECT :v2", unionQuery.sql());
+        assertEquals(ImmutableSet.of("v2"), unionQuery.missingParams());
     }
 }

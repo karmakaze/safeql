@@ -7,7 +7,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
-public class Join<L extends Entity, R extends Entity> implements SqlExpr {
+public class Join<L extends Entity, R extends Entity> extends SqlExpr {
     public enum Type {
         JOIN,
         LEFT_JOIN,
@@ -87,7 +87,7 @@ public class Join<L extends Entity, R extends Entity> implements SqlExpr {
     public static class Cond2<L, R> {
     }
 
-    public static class Equate<L extends Entity, R extends Entity, T> implements SqlExpr {
+    public static class Equate<L extends Entity, R extends Entity, T> extends SqlExpr {
         public final Col<L, T> lCol;
         public final Col<R, T> rCol;
 

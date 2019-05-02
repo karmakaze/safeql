@@ -1,6 +1,6 @@
 package org.keithkim.typeql;
 
-public class Col<E extends Entity, T> implements Field<T>, SqlExpr {
+public class Col<E extends Entity, T> extends SqlExpr implements Field<T> {
     public final Class<E> entityClass;
     public final String tableAlias;
     public final String colName;

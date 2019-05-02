@@ -13,7 +13,7 @@ class AccountsTest {
         String dbPassword = System.getenv("DB_PASSWORD");
         Database db = new Database(jdbcUrl, dbUser, dbPassword);
         Accounts accounts = new Accounts(db);
-        accounts = accounts.where("true");
+        accounts = accounts.where("id >= 1000");
         accounts.loadProjects();
         for (Account account : accounts) {
             System.out.println(account);
