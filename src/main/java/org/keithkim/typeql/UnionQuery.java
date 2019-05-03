@@ -24,6 +24,15 @@ public class UnionQuery extends SqlExpr {
         return Joiner.on(joiner).join(selectQueries);
     }
 
+    public void bind(String name, Object value) {
+        if (missingParams().contains(name)) {
+            params().put(name, Optional.of(value));
+        }
+        for (SelectQuery q : selectQueries) {
+            q.bind(name, value);
+        }
+    }
+
     public Map<String, Optional<?>> params() {
         Map<String, Optional<?>> params = new HashMap<>();
         for (SelectQuery q : selectQueries) {
