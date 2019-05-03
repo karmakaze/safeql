@@ -1,7 +1,7 @@
 package org.keithkim.demo.photos;
 
-import org.keithkim.typeql.Col;
-import org.keithkim.typeql.Table;
+import org.keithkim.safeql.Col;
+import org.keithkim.safeql.Table;
 
 public class UserJoinPhoto extends UserJoinPhotoOn<Long> {
     public UserJoinPhoto(Table<User> userAlias, Table<Photo> photoAlias) {

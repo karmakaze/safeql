@@ -1,8 +1,8 @@
 package org.keithkim.demo.quicklog;
 
-import org.keithkim.typeql.Col;
-import org.keithkim.typeql.Entity;
-import org.keithkim.typeql.Table;
+import org.keithkim.safeql.Col;
+import org.keithkim.safeql.Entity;
+import org.keithkim.safeql.Table;
 
 import java.beans.ConstructorProperties;
 

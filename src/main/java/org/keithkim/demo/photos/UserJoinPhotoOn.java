@@ -1,6 +1,6 @@
 package org.keithkim.demo.photos;
 
-import org.keithkim.typeql.*;
+import org.keithkim.safeql.*;
 
 public class UserJoinPhotoOn<T> extends Join<User, Photo> implements SqlExpression {
     static UserJoinPhotoOn natural(Table<User> userAlias, Table<Photo> photoAlias) {

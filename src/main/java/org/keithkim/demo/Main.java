@@ -8,7 +8,7 @@ import org.keithkim.demo.photos.User;
 import org.keithkim.demo.photos.UserJoinPhoto;
 import org.keithkim.demo.quicklog.Account;
 import org.keithkim.demo.quicklog.Project;
-import org.keithkim.typeql.Table;
+import org.keithkim.safeql.Table;
 
 import java.util.List;
 
