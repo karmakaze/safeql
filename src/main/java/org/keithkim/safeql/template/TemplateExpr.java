@@ -9,7 +9,7 @@ public class TemplateExpr<T> extends Expr<T> {
         super(template);
     }
 
-    Expr<T> render(Map<String, ?> params) {
+    public Expr<T> render(Map<String, ?> params) {
         String rendered = super.toString();
 
         for (Map.Entry<String, ?> me : params.entrySet()) {

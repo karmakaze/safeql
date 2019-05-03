@@ -1,4 +1,7 @@
-package org.keithkim.safeql.template;
+package org.keithkim.safeql.sql;
+
+import org.keithkim.safeql.template.Expr;
+import org.keithkim.safeql.template.TernaryExpr;
 
 public class SqlBetween<T> extends TernaryExpr<T> {
     public SqlBetween(Expr<T> subject, Expr<T> rangeMin, Expr<T> rangeMax) {

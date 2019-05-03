@@ -1,6 +1,7 @@
-package org.keithkim.safeql.template;
+package org.keithkim.safeql.sql;
 
 import org.junit.jupiter.api.Test;
+import org.keithkim.safeql.sql.SqlBetween;
 
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -1,4 +1,6 @@
-package org.keithkim.safeql.template;
+package org.keithkim.safeql.sql;
+
+import org.keithkim.safeql.template.Expr;
 
 import java.util.Map;
 

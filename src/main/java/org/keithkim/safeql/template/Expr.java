@@ -13,7 +13,7 @@ public class Expr<T> {
         this.string = string;
     }
 
-    Expr<T> render(Map<String, ?> params) {
+    public Expr<T> render(Map<String, ?> params) {
         return this;
     }
 

@@ -19,7 +19,7 @@ public class NAryExpr<T> extends Expr<T> {
         this.exprs = exprs;
     }
 
-    Expr<T> render(Map<String, ?> params) {
+    public Expr<T> render(Map<String, ?> params) {
         if (exprs.length == 0) {
             return identity;
         } else if (exprs.length == 1) {
