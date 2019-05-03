@@ -7,26 +7,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UnaryExprTest {
     @Test
-    public void renderSimpleReturnsPrefixedExpr() {
+    public void resolveSimpleReturnsPrefixedExpr() {
         UnaryExpr<Boolean> notFalse = new UnaryExpr<>("NOT", new Expr<>("FALSE"));
-        assertEquals("NOT FALSE", notFalse.render(emptyMap()).toString());
+        assertEquals("NOT FALSE", notFalse.resolve(emptyMap()).toString());
     }
 
     @Test
-    public void renderCompoundReturnsPrefixedGroupedExpr() {
+    public void resolveCompoundReturnsPrefixedGroupedExpr() {
         UnaryExpr<Boolean> notTrueOrFalse = new UnaryExpr<>("NOT", new Expr<>("TRUE OR FALSE"));
-        assertEquals("NOT (TRUE OR FALSE)", notTrueOrFalse.render(emptyMap()).toString());
+        assertEquals("NOT (TRUE OR FALSE)", notTrueOrFalse.resolve(emptyMap()).toString());
     }
 
     @Test
-    public void renderSimpleFunctionReturnsPrefixedGroupedExpr() {
+    public void resolveSimpleFunctionReturnsPrefixedGroupedExpr() {
         UnaryExpr<String> trimPadded = new UnaryExpr<>("TRIM()", new Expr<>("' padded '"));
-        assertEquals("TRIM(' padded ')", trimPadded.render(emptyMap()).toString());
+        assertEquals("TRIM(' padded ')", trimPadded.resolve(emptyMap()).toString());
     }
 
     @Test
-    public void renderCompoundFunctionReturnsPrefixedGroupedExpr() {
+    public void resolveCompoundFunctionReturnsPrefixedGroupedExpr() {
         UnaryExpr<String> trimPrefixSuffix = new UnaryExpr<>("TRIM()", new Expr<>("' prefix ' || ' suffix '"));
-        assertEquals("TRIM(' prefix ' || ' suffix ')", trimPrefixSuffix.render(emptyMap()).toString());
+        assertEquals("TRIM(' prefix ' || ' suffix ')", trimPrefixSuffix.resolve(emptyMap()).toString());
     }
 }

@@ -10,7 +10,7 @@ public class BinaryExpr<T> extends Expr<T> {
         this.nAryExpr = new NAryExpr<>(operator, null, left, right);
     }
 
-    public Expr<T> render(Map<String, ?> params) {
-        return nAryExpr.render(params);
+    public Expr<T> resolve(Map<String, ?> params) {
+        return nAryExpr.resolve(params);
     }
 }

@@ -1,7 +1,7 @@
 package org.keithkim.demo.photos;
 
 import org.keithkim.safeql.Col;
-import org.keithkim.safeql.Entity;
+import org.keithkim.safeql.sql.Entity;
 import org.keithkim.safeql.Table;
 
 public class Photo extends Entity<Long> {

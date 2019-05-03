@@ -16,8 +16,8 @@ public class SqlEqual<T> {
     }
 
     public Expr<Boolean> render(Map<String, ?> params) {
-        String leftString = left.render(params).toString();
-        String rightString = right.render(params).toString();
+        String leftString = left.resolve(params).toString();
+        String rightString = right.resolve(params).toString();
         if ("NULL".equalsIgnoreCase(leftString)) {
             if ("NULL".equalsIgnoreCase(rightString)) {
                 // TODO do we ever want this to mean TRUE?

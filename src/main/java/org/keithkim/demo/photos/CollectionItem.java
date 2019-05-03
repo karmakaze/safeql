@@ -1,7 +1,7 @@
 package org.keithkim.demo.photos;
 
 import org.keithkim.safeql.Col;
-import org.keithkim.safeql.Entity;
+import org.keithkim.safeql.sql.Entity;
 
 public class CollectionItem extends Entity<Long> {
     public final Col<CollectionItem, Long> collectionIdCol;

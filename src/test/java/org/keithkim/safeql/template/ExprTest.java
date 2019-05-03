@@ -13,9 +13,9 @@ public class ExprTest {
     }
 
     @Test
-    public void renderReturnsStringExpr() {
+    public void resolveReturnsStringExpr() {
         Expr<String> expr = new Expr<>("This is a string expression.");
-        Expr<String> rendered = expr.render(emptyMap());
+        Expr<String> rendered = expr.resolve(emptyMap());
         assertEquals("This is a string expression.", rendered.toString());
     }
 }

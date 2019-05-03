@@ -1,5 +1,7 @@
 package org.keithkim.safeql;
 
+import org.keithkim.safeql.sql.Entity;
+
 public class Table<T extends Entity> extends SqlAliasExpr {
     public final Class<T> tableClass;
 

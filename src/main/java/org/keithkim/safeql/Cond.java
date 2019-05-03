@@ -1,5 +1,7 @@
 package org.keithkim.safeql;
 
+import org.keithkim.safeql.sql.Entity;
+
 public class Cond {
     public static class EqualCol<L extends Entity, R extends Entity, T> extends SqlExpr {
         public final Col<L, T> lCol;

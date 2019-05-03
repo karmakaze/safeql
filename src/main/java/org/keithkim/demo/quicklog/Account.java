@@ -1,7 +1,7 @@
 package org.keithkim.demo.quicklog;
 
 import org.keithkim.safeql.Col;
-import org.keithkim.safeql.Entity;
+import org.keithkim.safeql.sql.Entity;
 import org.keithkim.safeql.Table;
 
 import java.beans.ConstructorProperties;

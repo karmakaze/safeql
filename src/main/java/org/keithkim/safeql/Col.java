@@ -1,5 +1,8 @@
 package org.keithkim.safeql;
 
+import org.keithkim.safeql.sql.Entity;
+import org.keithkim.safeql.sql.Field;
+
 public class Col<E extends Entity, T> extends SqlExpr implements Field<T> {
     public final Class<E> entityClass;
     public final String tableAlias;

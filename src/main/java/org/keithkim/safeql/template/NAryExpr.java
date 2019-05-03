@@ -19,14 +19,14 @@ public class NAryExpr<T> extends Expr<T> {
         this.exprs = exprs;
     }
 
-    public Expr<T> render(Map<String, ?> params) {
+    public Expr<T> resolve(Map<String, ?> params) {
         if (exprs.length == 0) {
             return identity;
         } else if (exprs.length == 1) {
-            return exprs[0].render(params);
+            return exprs[0].resolve(params);
         }
         String operator = super.string;
-        List<String> terms = asList(exprs).stream().map(expr -> group(expr.render(params).toString())).collect(toList());
+        List<String> terms = asList(exprs).stream().map(expr -> group(expr.resolve(params).toString())).collect(toList());
         if (operator.endsWith("()")) {
             String arguments = Joiner.on(", ").join(terms);
             return new Expr<>(operator.substring(0, operator.length() - 1) + arguments +")");

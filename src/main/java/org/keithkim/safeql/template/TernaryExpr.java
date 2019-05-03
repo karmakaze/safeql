@@ -20,12 +20,12 @@ public class TernaryExpr<T> extends Expr<T> {
         this.expr3 = expr3;
     }
 
-    public Expr<T> render(Map<String, ?> params) {
-        String string = group(expr1.render(params).toString()) +
+    public Expr<T> resolve(Map<String, ?> params) {
+        String string = group(expr1.resolve(params).toString()) +
                 " "+ operator1 + " " +
-                group(expr2.render(params).toString()) +
+                group(expr2.resolve(params).toString()) +
                 " "+ operator2 + " " +
-                group(expr3.render(params).toString());
+                group(expr3.resolve(params).toString());
         return new Expr<>(string);
     }
 }

@@ -1,4 +1,4 @@
-package org.keithkim.safeql;
+package org.keithkim.safeql.sql;
 
 public class Entity<PkType> {
     public final String name;

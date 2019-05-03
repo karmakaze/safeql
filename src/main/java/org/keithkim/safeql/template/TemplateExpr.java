@@ -9,7 +9,7 @@ public class TemplateExpr<T> extends Expr<T> {
         super(template);
     }
 
-    public Expr<T> render(Map<String, ?> params) {
+    public Expr<T> resolve(Map<String, ?> params) {
         String rendered = super.toString();
 
         for (Map.Entry<String, ?> me : params.entrySet()) {
@@ -26,7 +26,7 @@ public class TemplateExpr<T> extends Expr<T> {
         TemplateExpr<String> templateExpr = new TemplateExpr<>("Hello :name :name_1 :name12 :name12_3");
         System.out.println(templateExpr);
 
-        Expr<String> expr = templateExpr.render(ImmutableMap.of("name", "Keith", "name12", "twelve"));
+        Expr<String> expr = templateExpr.resolve(ImmutableMap.of("name", "Keith", "name12", "twelve"));
         System.out.println(expr);
     }
 }

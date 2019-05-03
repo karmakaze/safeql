@@ -1,6 +1,7 @@
 package org.keithkim.safeql;
 
 import com.google.common.base.Joiner;
+import org.keithkim.safeql.sql.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
