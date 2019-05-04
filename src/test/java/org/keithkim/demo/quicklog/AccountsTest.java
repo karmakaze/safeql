@@ -2,6 +2,7 @@ package org.keithkim.demo.quicklog;
 
 import org.junit.jupiter.api.Test;
 import org.keithkim.demo.Database;
+import org.keithkim.safeql.Registry;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,8 +13,8 @@ class AccountsTest {
         String dbUser = System.getenv("DB_USER");
         String dbPassword = System.getenv("DB_PASSWORD");
         Database db = new Database(jdbcUrl, dbUser, dbPassword);
-        Accounts accounts = new Accounts(db);
-        accounts = accounts.where("id >= 1000");
+        Registry.registerDefault(db);
+        Accounts accounts = Accounts.where("id >= 1000");
         accounts.loadProjects();
         for (Account account : accounts) {
             System.out.println(account);

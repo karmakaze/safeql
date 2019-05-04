@@ -1,27 +1,15 @@
 package org.keithkim.demo.quicklog;
 
-import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
-import org.keithkim.demo.Database;
+import org.keithkim.safeql.Registry;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
 
 public class Accounts extends ArrayList<Account> {
-    private final Database db;
-
-    public Accounts(Database db) {
-        super();
-        this.db = db;
-    }
-
-    public Accounts(Database db, List<Account> accounts) {
+    public Accounts(List<Account> accounts) {
         super(accounts);
-        this.db = db;
     }
 
     public Set<Long> ids() {
@@ -36,11 +24,16 @@ public class Accounts extends ArrayList<Account> {
         return accountById;
     }
 
+    public Accounts andWhere(String cond) {
+        // TODO more filtering
+        return this;
+    }
+
     public Projects loadProjects() {
         Map<Long, Account> accountById = byId();
         Set<Long> accountIds = accountById.keySet();
 
-        Projects projects = new Projects(db);
+        Projects projects = new Projects();
         projects = projects.whereAccountIdIn(accountIds);
 
         for (Project project : projects) {
@@ -53,9 +46,8 @@ public class Accounts extends ArrayList<Account> {
         return projects;
     }
 
-    public Accounts where(String cond) {
-        List<Account> accounts = db.jdbi.withHandle(handle -> {
-            handle.registerRowMapper(ConstructorMapper.factory(Account.class));
+    public static Accounts where(String cond) {
+        List<Account> accounts = Registry.using(singletonList(new Account.Table("account", null)),handle -> {
             String whereClause = "";
             if (cond != null && !cond.isEmpty()) {
                 whereClause = " WHERE " + cond;
@@ -64,6 +56,6 @@ public class Accounts extends ArrayList<Account> {
                     .mapTo(Account.class)
                     .list();
         });
-        return new Accounts(db, accounts);
+        return new Accounts(accounts);
     }
 }

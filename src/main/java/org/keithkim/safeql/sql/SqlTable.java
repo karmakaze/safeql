@@ -1,34 +1,33 @@
 package org.keithkim.safeql.sql;
 
 import com.google.common.base.Joiner;
+import org.keithkim.safeql.Registry;
 import org.keithkim.safeql.template.Expr;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
+import static java.util.Collections.singletonList;
 import static org.keithkim.safeql.sql.Helpers.group;
 
-public class SqlTable<T extends SqlEntity> extends Expr<T> {
-    public final Class<T> entityClass;
+public class SqlTable<E extends SqlEntity> extends Expr<E> {
+    public final Class<E> entityClass;
     private final String alias;
 
-    public SqlTable(Class<T> entityClass) {
+    public SqlTable(Class<E> entityClass) {
         this(entityClass, entityClass.getSimpleName().toLowerCase());
     }
 
-    public SqlTable(Class<T> tableClass, String tableExpr) {
+    public SqlTable(Class<E> tableClass, String tableExpr) {
         this(tableClass, tableExpr, null);
     }
 
-    public SqlTable(Class<T> tableClass, String tableExpr, String alias) {
+    public SqlTable(Class<E> tableClass, String tableExpr, String alias) {
         super(tableExpr);
         this.entityClass = tableClass;
         this.alias = alias;
     }
 
-    public Expr<T> resolve(Map<String, ?> params) {
+    public Expr<E> resolve(Map<String, ?> params) {
         if (alias != null) {
             return Expr.expr(group(super.toString()) +" "+ alias);
         }
@@ -45,6 +44,24 @@ public class SqlTable<T extends SqlEntity> extends Expr<T> {
 
     public <T> SqlColumn<T> sqlColumn(String columnName) {
         return new SqlColumn<>(columnName);
+    }
+
+    public List<E> all() {
+        return where(null);
+    }
+
+    public List<E> where(String criteria) {
+        final String whereCriteria;
+        if (criteria != null && !criteria.isEmpty()) {
+            whereCriteria = " WHERE " + criteria;
+        } else {
+            whereCriteria = "";
+        }
+        return Registry.using(singletonList(this), handle -> {
+            return handle.createQuery("SELECT * FROM " + this.toString() + whereCriteria)
+                    .mapTo(entityClass)
+                    .list();
+        });
     }
 
     public class SqlColumn<T> extends Expr<T> {

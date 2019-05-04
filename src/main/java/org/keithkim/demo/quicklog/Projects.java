@@ -2,24 +2,22 @@ package org.keithkim.demo.quicklog;
 
 import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 import org.keithkim.demo.Database;
+import org.keithkim.safeql.Registry;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
 
 public class Projects extends ArrayList<Project> {
-    private final Database db;
-
-    public Projects(Database db) {
+    public Projects() {
         super();
-        this.db = db;
     }
 
-    public Projects(Database db, List<Project> projects) {
+    public Projects(List<Project> projects) {
         super(projects);
-        this.db = db;
     }
 
     public Set<Long> ids() {
@@ -27,18 +25,18 @@ public class Projects extends ArrayList<Project> {
     }
 
     public Projects whereAccountIdIn(Set<Long> accountIds) {
-        List<Project> projects = db.jdbi.withHandle(handle -> {
+        List<Project> projects = Registry.using(singletonList(new Account.Table("account", null)), handle -> {
             handle.registerRowMapper(ConstructorMapper.factory(Project.class));
             return handle.createQuery("SELECT * FROM project WHERE account_id IN (<account_ids>)")
                     .bindList("account_ids", new ArrayList<>(accountIds))
                     .mapTo(Project.class)
                     .list();
         });
-        return new Projects(db, projects);
+        return new Projects(projects);
     }
 
     public Projects where(String cond) {
-        List<Project> projects = db.jdbi.withHandle(handle -> {
+        List<Project> projects = Registry.using(singletonList(new Project.Table("project", null)), handle -> {
             handle.registerRowMapper(ConstructorMapper.factory(Project.class));
             String whereClause = "";
             if (cond != null && !cond.isEmpty()) {
@@ -48,6 +46,6 @@ public class Projects extends ArrayList<Project> {
                     .mapTo(Project.class)
                     .list();
         });
-        return new Projects(db, projects);
+        return new Projects(projects);
     }
 }

@@ -33,6 +33,9 @@ public class Registry {
             Database db1 = entityDatabase.get(table.entityClass);
             if (db1 == null) {
                 db1 = defaultDb;
+                if (db1 == null) {
+                    throw new RuntimeException(table.entityClass.getName() +" not in Registry");
+                }
             }
             if (db == null) {
                 db = db1;

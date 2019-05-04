@@ -2,15 +2,15 @@ package org.keithkim.demo;
 
 import org.jdbi.v3.core.mapper.JoinRow;
 import org.jdbi.v3.core.mapper.JoinRowMapper;
-import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 import org.keithkim.demo.quicklog.Account;
+import org.keithkim.demo.quicklog.Accounts;
 import org.keithkim.demo.quicklog.Project;
+import org.keithkim.demo.quicklog.Projects;
 import org.keithkim.safeql.Registry;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 
 public class Main {
     public static void main(String[] args) {
@@ -20,25 +20,15 @@ public class Main {
         Database db = new Database(jdbcUrl, dbUser, dbPassword);
         Registry.registerDefault(db);
 
-        List<Account> accounts = Registry.using(singletonList(new Account.Table("account", null)), handle -> {
-            return handle.createQuery("SELECT * FROM account")
-                    .mapTo(Account.class)
-                    .list();
-        });
+        Account.Table accountTable = new Account.Table("account", null);
+        Accounts accounts = accountTable.where("id >= 1000");
         for (Account account : accounts) {
            System.out.println(account);
         }
 
-        List<Project> projects = Registry.using(singletonList(new Project.Table("project", null)), handle -> {
-            return handle.createQuery("SELECT * FROM project")
-                    .mapTo(Project.class)
-                    .list();
-        });
-        for (Project project : projects) {
-            System.out.println(project);
-        }
+        Projects projects = accounts.loadProjects();
 
-        Account.Table accountTable = new Account.Table("account", "a");
+        accountTable = new Account.Table("account", "a");
         Project.Table projectTable = new Project.Table("project", "p");
 
         List<JoinRow> accountAndProjects = Registry.using(asList(accountTable, projectTable), handle -> {

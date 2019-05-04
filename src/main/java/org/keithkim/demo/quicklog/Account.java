@@ -27,6 +27,14 @@ public class Account extends SqlEntity<Long> {
 
         public final Id idCol = new Id();
         public final FullName fullNameCol = new FullName();
+
+        public Accounts all() {
+            return where(null);
+        }
+
+        public Accounts where(String criteria) {
+            return new Accounts(super.where(criteria));
+        };
     }
 
     public Long id;
