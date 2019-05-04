@@ -1,11 +1,7 @@
-package org.keithkim.safeql;
+package org.keithkim.safeql.sql;
 
 import org.jdbi.v3.core.Handle;
-import org.jdbi.v3.core.mapper.JoinRowMapper;
 import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
-import org.keithkim.demo.Database;
-import org.keithkim.safeql.sql.SqlEntity;
-import org.keithkim.safeql.sql.SqlTable;
 
 import java.util.HashMap;
 import java.util.List;

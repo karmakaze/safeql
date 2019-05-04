@@ -1,4 +1,4 @@
-package org.keithkim.demo;
+package org.keithkim.safeql.sql;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.jdbi.v3.core.Jdbi;

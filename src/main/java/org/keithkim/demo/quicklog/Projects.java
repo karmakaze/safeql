@@ -1,8 +1,7 @@
 package org.keithkim.demo.quicklog;
 
 import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
-import org.keithkim.demo.Database;
-import org.keithkim.safeql.Registry;
+import org.keithkim.safeql.sql.Registry;
 
 import java.util.ArrayList;
 import java.util.List;
