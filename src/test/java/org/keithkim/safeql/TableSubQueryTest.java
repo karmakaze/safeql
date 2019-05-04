@@ -1,7 +1,7 @@
 package org.keithkim.safeql;
 
 import org.junit.jupiter.api.Test;
-import org.keithkim.demo.photos.User;
+import org.keithkim.demo.quicklog.Project;
 import org.keithkim.safeql.sql.*;
 import org.keithkim.safeql.template.Expr;
 
@@ -12,20 +12,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TableSubQueryTest {
     @Test
     void simpleTest() {
-        class Photo extends SqlEntity<Long> {
-            Photo() {
-                super("photo");
-            }
-        }
-        Photo photoEntity = new Photo();
+        Project.Table projectTable = new Project.Table("project", null);
 
-        SqlTable<Photo> photoTable = new SqlTable<>(Photo.class);
-        SqlColumn<Photo, Long> idCol = new SqlColumn<>(photoEntity, "id");
-        SqlColumn<Photo, Long> userIdCol = new SqlColumn<>(photoEntity, "user_id");
-
-        SqlSelect<Photo> selectQuery = new SqlSelect<>(photoTable, asList(idCol, userIdCol));
-        Expr<SqlRows<Photo>> resolved = selectQuery.resolve(emptyMap());
-        assertEquals("SELECT id, user_id FROM photo", resolved.toString());
+        SqlSelect<Project> selectQuery = new SqlSelect<>(projectTable, asList(projectTable.idCol, projectTable.nameCol));
+        Expr<SqlRows<Project>> resolved = selectQuery.resolve(emptyMap());
+        assertEquals("SELECT project.id, project.name FROM project", resolved.toString());
     }
 
     @Test

@@ -4,7 +4,7 @@ import org.keithkim.safeql.template.Expr;
 
 import java.util.Map;
 
-import static org.keithkim.safeql.template.Helpers.group;
+import static org.keithkim.safeql.sql.Helpers.group;
 
 public class Equal<T> extends Expr<Boolean> {
     public final Expr<T> left;

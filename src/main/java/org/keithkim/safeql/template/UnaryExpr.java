@@ -2,7 +2,7 @@ package org.keithkim.safeql.template;
 
 import java.util.Map;
 
-import static org.keithkim.safeql.template.Helpers.group;
+import static org.keithkim.safeql.sql.Helpers.group;
 
 public class UnaryExpr<T> extends Expr<T> {
     private final Expr<T> expr;

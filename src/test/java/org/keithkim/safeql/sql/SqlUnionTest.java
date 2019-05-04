@@ -1,78 +1,93 @@
 package org.keithkim.safeql.sql;
 
-import com.google.common.collect.ImmutableSet;
 import org.junit.jupiter.api.Test;
-import org.keithkim.safeql.SelectQuery;
-import org.keithkim.safeql.UnionQuery;
-import org.keithkim.safeql.UnionQuery.Type;
+import org.keithkim.safeql.sql.SqlUnion.Type;
+import org.keithkim.safeql.template.Expr;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SqlUnionTest {
     @Test
     void empty() {
-        UnionQuery unionQuery = new UnionQuery();
-        assertEquals("", unionQuery.sql());
+        SqlUnion<String> unionQuery = new SqlUnion<>();
+        Expr<String> resolved = unionQuery.resolve(emptyMap());
+        assertEquals("", resolved.toString());
     }
 
     @Test
     void single() {
-        UnionQuery unionQuery = new UnionQuery(new SelectQuery("SELECT 1"));
-        assertEquals("SELECT 1", unionQuery.sql());
+        SqlUnion<String> unionQuery = new SqlUnion<>(
+                new SqlSelect(System.Table.none, asList(System.Table.column("1"))).asTableExpr());
+        Expr<String> resolved = unionQuery.resolve(emptyMap());
+        assertEquals("SELECT 1", resolved.toString());
     }
 
     @Test
     void unionDefault2() {
-        UnionQuery unionQuery = new UnionQuery(new SelectQuery("SELECT 1"),
-                new SelectQuery("SELECT 2"));
-        assertEquals("SELECT 1 UNION SELECT 2", unionQuery.sql());
+        SqlUnion<String> unionQuery = new SqlUnion<>(
+                new SqlSelect(System.Table.none, asList(System.Table.column("1"))).asTableExpr(),
+                new SqlSelect(System.Table.none, asList(System.Table.column("2"))).asTableExpr());
+        Expr<String> resolved = unionQuery.resolve(emptyMap());
+        assertEquals("SELECT 1 UNION SELECT 2", resolved.toString());
     }
 
     @Test
     void union2() {
-        UnionQuery unionQuery = new UnionQuery(Type.UNION,
-                new SelectQuery("SELECT 1"),
-                new SelectQuery("SELECT 2"));
-        assertEquals("SELECT 1 UNION SELECT 2", unionQuery.sql());
+        SqlUnion<String> unionQuery = new SqlUnion<>(Type.UNION,
+                new SqlSelect(System.Table.none, asList(System.Table.column("1"))).asTableExpr(),
+                new SqlSelect(System.Table.none, asList(System.Table.column("2"))).asTableExpr());
+        Expr<String> resolved = unionQuery.resolve(emptyMap());
+        assertEquals("SELECT 1 UNION SELECT 2", resolved.toString());
     }
 
     @Test
     void unionAll2() {
-        UnionQuery unionQuery = new UnionQuery(Type.UNION_ALL,
-                new SelectQuery("SELECT 1"),
-                new SelectQuery("SELECT 2"));
-        assertEquals("SELECT 1 UNION ALL SELECT 2", unionQuery.sql());
+        SqlUnion<String> unionQuery = new SqlUnion<>(Type.UNION_ALL,
+                new SqlSelect(System.Table.none, asList(System.Table.column("1"))).asTableExpr(),
+                new SqlSelect(System.Table.none, asList(System.Table.column("2"))).asTableExpr());
+        Expr<String> resolved = unionQuery.resolve(emptyMap());
+        assertEquals("SELECT 1 UNION ALL SELECT 2", resolved.toString());
     }
 
     @Test
     void unionDistinct2() {
-        UnionQuery unionQuery = new UnionQuery(Type.UNION_DISTINCT,
-                new SelectQuery("SELECT 1"),
-                new SelectQuery("SELECT 2"));
-        assertEquals("SELECT 1 UNION DISTINCT SELECT 2", unionQuery.sql());
+        SqlUnion<String> unionQuery = new SqlUnion<>(Type.UNION_DISTINCT,
+                new SqlSelect(System.Table.none, asList(System.Table.column("1"))).asTableExpr(),
+                new SqlSelect(System.Table.none, asList(System.Table.column("2"))).asTableExpr());
+        Expr<String> resolved = unionQuery.resolve(emptyMap());
+        assertEquals("SELECT 1 UNION DISTINCT SELECT 2", resolved.toString());
     }
 
     @Test
     void union3() {
-        UnionQuery unionQuery = new UnionQuery(new SelectQuery("SELECT 1"),
-                new SelectQuery("SELECT 2"), new SelectQuery("SELECT 3"));
-        assertEquals("SELECT 1 UNION SELECT 2 UNION SELECT 3", unionQuery.sql());
+        SqlUnion<String> unionQuery = new SqlUnion<>(
+                new SqlSelect(System.Table.none, asList(System.Table.column("1"))).asTableExpr(),
+                new SqlSelect(System.Table.none, asList(System.Table.column("2"))).asTableExpr(),
+                new SqlSelect(System.Table.none, asList(System.Table.column("3"))).asTableExpr());
+        Expr<String> resolved = unionQuery.resolve(emptyMap());
+        assertEquals("SELECT 1 UNION SELECT 2 UNION SELECT 3", resolved.toString());
     }
 
     @Test
     void missingBindVars() {
-        UnionQuery unionQuery = new UnionQuery(new SelectQuery("SELECT :v1"),
-                new SelectQuery("SELECT :v2"));
-        assertEquals("SELECT :v1 UNION SELECT :v2", unionQuery.sql());
-        assertEquals(ImmutableSet.of("v1", "v2"), unionQuery.missingParams());
+        SqlUnion<String> unionQuery = new SqlUnion<>(
+                new SqlSelect(System.Table.none, asList(System.Table.column(":v1"))).asTableExpr(),
+                new SqlSelect(System.Table.none, asList(System.Table.column(":v2"))).asTableExpr());
+        Expr<String> resolved = unionQuery.resolve(emptyMap());
+        assertEquals("SELECT :v1 UNION SELECT :v2", resolved.toString());
+//        assertEquals(ImmutableSet.of("v1", "v2"), unionQuery.missingParams());
     }
 
     @Test
     void missingSomeBindVars() {
-        UnionQuery unionQuery = new UnionQuery(new SelectQuery("SELECT :v1"),
-                new SelectQuery("SELECT :v2"));
-        unionQuery.bind("v1", "value 1");
-        assertEquals("SELECT :v1 UNION SELECT :v2", unionQuery.sql());
-        assertEquals(ImmutableSet.of("v2"), unionQuery.missingParams());
+        SqlUnion<String> unionQuery = new SqlUnion<>(
+                new SqlSelect(System.Table.none, asList(System.Table.column(":v1"))).asTableExpr(),
+                new SqlSelect(System.Table.none, asList(System.Table.column(":v2"))).asTableExpr());
+//        unionQuery.bind("v1", "value 1");
+        Expr<String> resolved = unionQuery.resolve(emptyMap());
+        assertEquals("SELECT :v1 UNION SELECT :v2", resolved.toString());
+//        assertEquals(ImmutableSet.of("v2"), unionQuery.missingParams());
     }
 }

@@ -1,22 +1,14 @@
 package org.keithkim.demo.quicklog;
 
 import org.jdbi.v3.core.mapper.JoinRow;
-import org.jdbi.v3.core.mapper.JoinRowMapper;
-import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 import org.keithkim.demo.Database;
-import org.keithkim.demo.photos.Photo;
-import org.keithkim.demo.photos.User;
-import org.keithkim.demo.photos.UserJoinPhoto;
 import org.keithkim.safeql.Join;
 import org.keithkim.safeql.Registry;
-import org.keithkim.safeql.sql.SqlSelect;
 import org.keithkim.safeql.sql.SqlTable;
-import org.keithkim.safeql.sql.SqlTableAlias;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyMap;
 
 public class QuicklogMain {
     public static void main(String[] args) {
@@ -27,8 +19,8 @@ public class QuicklogMain {
         Registry.register(Account.class, db);
         Registry.register(Project.class, db);
 
-        SqlTableAlias accountTable = new SqlTableAlias<>(Account.class, "a");
-        SqlTableAlias projectTable = new SqlTableAlias<>(Project.class, "p");
+        SqlTable accountTable = new SqlTable<>(Account.class, "a");
+        SqlTable projectTable = new SqlTable<>(Project.class, "p");
 
         Join<Account, Project> accountJoinProject = new Join(accountTable, projectTable).where(new Join.Cond2());
 
@@ -47,7 +39,5 @@ public class QuicklogMain {
             Project project = row.get(Project.class);
             System.out.println(account +" :has: "+ project);
         }
-        UserJoinPhoto up = new UserJoinPhoto(new SqlTable<>(User.class, "u"), new SqlTable<>(Photo.class, "p"));
-        System.out.println(up.resolve(emptyMap()));
     }
 }

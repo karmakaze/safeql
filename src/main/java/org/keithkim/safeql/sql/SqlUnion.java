@@ -1,13 +1,9 @@
 package org.keithkim.safeql.sql;
 
 import com.google.common.base.Joiner;
-import org.keithkim.safeql.SelectQuery;
-import org.keithkim.safeql.SqlExpr;
 import org.keithkim.safeql.template.Expr;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class SqlUnion<T> extends Expr<T> {
     private final Type type;
@@ -24,7 +20,7 @@ public class SqlUnion<T> extends Expr<T> {
     }
 
     public Expr<T> resolve(Map<String, ?> params) {
-        return Expr.expr(Joiner.on(super.toString()).join(tables));
+        return Expr.expr(Joiner.on(" " + type.toString() + " ").join(tables));
     }
 
 //    public void bind(String name, Object value) {

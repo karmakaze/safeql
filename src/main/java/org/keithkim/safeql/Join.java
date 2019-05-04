@@ -10,7 +10,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static org.keithkim.safeql.template.Helpers.group;
+import static org.keithkim.safeql.sql.Helpers.group;
 
 public class Join<L extends SqlEntity, R extends SqlEntity> extends Expr<SqlJoinRows<L, R>> {
     public enum Type {
@@ -49,14 +49,14 @@ public class Join<L extends SqlEntity, R extends SqlEntity> extends Expr<SqlJoin
         this.equates = asList(equates);
     }
 
-    public <T> Join(SqlTable<L> left, SqlColumn<L, T> lCol,
-                    SqlTable<R> right, SqlColumn<R, T> rCol) {
+    public <T> Join(SqlTable<L> left, SqlTable.SqlColumn lCol,
+                    SqlTable<R> right, SqlTable.SqlColumn rCol) {
         this(Type.JOIN, left, lCol, right, rCol);
     }
 
     public <T> Join(Type type,
-                    SqlTable<L> left, SqlColumn<L, T> lCol,
-                    SqlTable<R> right, SqlColumn<R, T> rCol) {
+                    SqlTable<L> left, SqlTable.SqlColumn lCol,
+                    SqlTable<R> right, SqlTable.SqlColumn rCol) {
         super(null);
         this.type = type;
         this.left = left;
@@ -65,8 +65,8 @@ public class Join<L extends SqlEntity, R extends SqlEntity> extends Expr<SqlJoin
     }
 
     public <T, U> Join(Type type,
-                       SqlTable<L> left, SqlColumn<L, T> lCol, SqlColumn<L, U> lCol2,
-                       SqlTable<R> right, SqlColumn<R, T> rCol, SqlColumn<R, U> rCol2) {
+                       SqlTable<L> left, SqlTable<L>.SqlColumn<T> lCol, SqlTable<L>.SqlColumn<T> lCol2,
+                       SqlTable<R> right, SqlTable<R>.SqlColumn<T> rCol, SqlTable<R>.SqlColumn<T> rCol2) {
         super(null);
         this.type = type;
         this.left = left;
@@ -75,8 +75,8 @@ public class Join<L extends SqlEntity, R extends SqlEntity> extends Expr<SqlJoin
     }
 
     public <T, U, V> Join(Type type,
-                          SqlTable<L> left, SqlColumn<L, T> lCol, SqlColumn<L, U> lCol2, SqlColumn<L, V> lCol3,
-                          SqlTable<R> right, SqlColumn<R, T> rCol, SqlColumn<R, U> rCol2, SqlColumn<R, V> rCol3) {
+                          SqlTable<L> left, SqlTable<L>.SqlColumn<T> lCol, SqlTable<L>.SqlColumn<U> lCol2, SqlTable<L>.SqlColumn<V> lCol3,
+                          SqlTable<R> right, SqlTable<R>.SqlColumn<T> rCol, SqlTable<L>.SqlColumn<U> rCol2, SqlTable<R>.SqlColumn<V> rCol3) {
         super(null);
         this.type = type;
         this.left = left;
@@ -107,10 +107,10 @@ public class Join<L extends SqlEntity, R extends SqlEntity> extends Expr<SqlJoin
     }
 
     public static class Equate<L extends SqlEntity, R extends SqlEntity, T> extends Expr<Boolean> {
-        public final SqlColumn<L, T> lCol;
-        public final SqlColumn<R, T> rCol;
+        public final SqlTable<L>.SqlColumn<T> lCol;
+        public final SqlTable<R>.SqlColumn<T> rCol;
 
-        public Equate(SqlColumn<L, T> lCol, SqlColumn<R, T> rCol) {
+        public Equate(SqlTable<L>.SqlColumn<T> lCol, SqlTable<R>.SqlColumn<T> rCol) {
             super(null);
             this.lCol = lCol;
             this.rCol = rCol;
@@ -122,7 +122,7 @@ public class Join<L extends SqlEntity, R extends SqlEntity> extends Expr<SqlJoin
             return Expr.expr(lColString +" = "+ rColString);
         }
 
-        private String colString(SqlTable<?> table, SqlColumn<?, T> col, Map<String, ?> params) {
+        private String colString(SqlTable<?> table, SqlTable<?>.SqlColumn<T> col, Map<String, ?> params) {
             List<String> colName = new ArrayList<>();
             table.alias().ifPresent(alias -> colName.add(alias));
             colName.add(col.resolveString(params));

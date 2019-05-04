@@ -7,7 +7,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static org.keithkim.safeql.template.Helpers.group;
+import static org.keithkim.safeql.sql.Helpers.group;
 
 public class NAryExpr<T> extends Expr<T> {
     private final Expr<T> identity;
