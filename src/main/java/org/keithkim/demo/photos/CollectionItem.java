@@ -4,13 +4,22 @@ import org.keithkim.safeql.sql.SqlColumn;
 import org.keithkim.safeql.sql.SqlEntity;
 
 public class CollectionItem extends SqlEntity<Long> {
-    public final SqlColumn<CollectionItem, Long> collectionIdCol;
-    public final SqlColumn<CollectionItem, Long> photoIdCol;
+    public class CollectionId extends SqlColumn<CollectionItem, Long>{
+        public CollectionId() {
+            super(CollectionItem.this, "collection_id");
+        }
+    }
+    public class PhotoId extends SqlColumn<CollectionItem, Long>{
+        public PhotoId() {
+            super(CollectionItem.this, "user_id");
+        }
+    }
+
+    public final CollectionId collectionIdCol = new CollectionId();
+    public final PhotoId photouserIdCol = new PhotoId();
 
     public CollectionItem() {
         super("collection_item");
-        collectionIdCol = new SqlColumn<>(this, "collection_id");
-        photoIdCol = new SqlColumn<>(this, "photo_id");
     }
 
     public static Class<UserJoinPhoto> join(Class<Photo> photoClass) {

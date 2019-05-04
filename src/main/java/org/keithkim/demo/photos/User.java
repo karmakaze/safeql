@@ -5,6 +5,17 @@ import org.keithkim.safeql.sql.SqlEntity;
 import org.keithkim.safeql.sql.SqlTable;
 
 public class User extends SqlEntity<Long> {
+    public class Id extends SqlColumn<User, Long>{
+        public Id() {
+            super(User.this, "id");
+        }
+    }
+    public class Name extends SqlColumn<User, String>{
+        public Name() {
+            super(User.this, "name");
+        }
+    }
+
     public final SqlColumn<User, Long> idCol;
     public final SqlColumn<User, String> nameCol;
 

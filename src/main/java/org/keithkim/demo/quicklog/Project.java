@@ -7,8 +7,19 @@ import org.keithkim.safeql.sql.SqlTable;
 import java.beans.ConstructorProperties;
 
 public class Project extends SqlEntity<Long> {
-    public final SqlColumn<Project, Long> idCol;
-    public final SqlColumn<Project, String> nameCol;
+    public class Id extends SqlColumn<Project, Long>{
+        public Id() {
+            super(Project.this, "id");
+        }
+    }
+    public class Name extends SqlColumn<Project, String>{
+        public Name() {
+            super(Project.this, "name");
+        }
+    }
+
+    public final Id idCol = new Id();
+    public final Name nameCol = new Name();
 
     public long id;
     public long accountId;
@@ -22,10 +33,6 @@ public class Project extends SqlEntity<Long> {
         this.accountId = accountId;
         this.name = name;
         this.domain = domain;
-
-        SqlTable<Project> table = new SqlTable<>(Project.class);
-        idCol = new SqlColumn<>(this, "id");
-        nameCol = new SqlColumn<>(this, "name");
     }
 
     public String toString() {

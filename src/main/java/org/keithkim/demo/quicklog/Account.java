@@ -2,7 +2,6 @@ package org.keithkim.demo.quicklog;
 
 import org.keithkim.safeql.sql.SqlColumn;
 import org.keithkim.safeql.sql.SqlEntity;
-import org.keithkim.safeql.sql.SqlTableAlias;
 
 import java.beans.ConstructorProperties;
 import java.time.Instant;
@@ -10,8 +9,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Account extends SqlEntity<Long> {
-    public final SqlColumn<Account, Long> idCol;
-    public final SqlColumn<Account, String> fullNameCol;
+    public class Id extends SqlColumn<Account, Long>{
+        public Id() {
+            super(Account.this, "id");
+        }
+    }
+    public class FullName extends SqlColumn<Account, String>{
+        public FullName() {
+            super(Account.this, "full_name");
+        }
+    }
+
+    public final Id idCol = new Id();
+    public final FullName fullNameCol = new FullName();
 
     public Long id;
     public String fullName;
@@ -29,10 +39,6 @@ public class Account extends SqlEntity<Long> {
         this.email = email;
         this.planName = planName;
         this.expires = expires;
-
-        SqlTableAlias<Account> table = new SqlTableAlias<>(Account.class, "a");
-        idCol = new SqlColumn<>(this, "id");
-        fullNameCol = new SqlColumn<>(this, "full_name");
     }
 
     void addProject(Project project) {

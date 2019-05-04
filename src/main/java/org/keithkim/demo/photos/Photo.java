@@ -5,8 +5,19 @@ import org.keithkim.safeql.sql.SqlEntity;
 import org.keithkim.safeql.sql.SqlTable;
 
 public class Photo extends SqlEntity<Long> {
-    public final SqlColumn<Photo, Long> idCol;
-    public final SqlColumn<Photo, Long> userIdCol;
+    public class Id extends SqlColumn<Photo, Long>{
+        public Id() {
+            super(Photo.this, "id");
+        }
+    }
+    public class UserId extends SqlColumn<Photo, Long>{
+        public UserId() {
+            super(Photo.this, "user_id");
+        }
+    }
+
+    public final Id idCol = new Id();
+    public final UserId userIdCol = new UserId();
 
     public static UserJoinPhoto join(Class<User> userClass) {
         return new UserJoinPhoto(new SqlTable<>(User.class), new SqlTable<>(Photo.class));
@@ -14,8 +25,6 @@ public class Photo extends SqlEntity<Long> {
 
     public Photo(SqlTable<Photo> table) {
         super("photo");
-        idCol = new SqlColumn<>(this, "id");
-        userIdCol = new SqlColumn<>(this, "user_id");
     }
 
     public SqlColumn<Photo, Long> userIdCol() {
