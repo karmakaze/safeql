@@ -1,10 +1,10 @@
 package org.keithkim.demo.quicklog;
 
 import org.jdbi.v3.core.mapper.JoinRow;
+import org.jdbi.v3.core.mapper.JoinRowMapper;
 import org.keithkim.demo.Database;
 import org.keithkim.safeql.Join;
 import org.keithkim.safeql.Registry;
-import org.keithkim.safeql.sql.SqlTable;
 
 import java.util.List;
 
@@ -16,15 +16,16 @@ public class QuicklogMain {
         String dbUser = System.getenv("DB_USER");
         String dbPassword = System.getenv("DB_PASSWORD");
         Database db = new Database(jdbcUrl, dbUser, dbPassword);
-        Registry.register(Account.class, db);
-        Registry.register(Project.class, db);
+        Registry.registerDefault(db);
 
-        SqlTable accountTable = new SqlTable<>(Account.class, "a");
-        SqlTable projectTable = new SqlTable<>(Project.class, "p");
+        Account.Table accountTable = new Account.Table("account", "a");
+        Project.Table projectTable = new Project.Table("project", "p");
 
         Join<Account, Project> accountJoinProject = new Join(accountTable, projectTable).where(new Join.Cond2());
 
-        List<JoinRow> accounts = Registry.using(asList(accountTable, projectTable), handle -> {
+        List<JoinRow> accountAndProjects = Registry.using(asList(accountTable, projectTable), handle -> {
+            handle.registerRowMapper(JoinRowMapper.forTypes(Account.class, Project.class));
+
             return handle.createQuery("SELECT a.id a_id, a.full_name a_full_name, a.email a_email, a.plan_name a_plan_name, a.expires a_expires, "+
                     "p.id p_id, p.account_id p_account_id, p.name p_name, p.domain p_domain "+
                     "FROM account a JOIN project p ON a.id = p.account_id "+
@@ -34,7 +35,7 @@ public class QuicklogMain {
                     .list();
         });
 
-        for (JoinRow row : accounts) {
+        for (JoinRow row : accountAndProjects) {
             Account account = row.get(Account.class);
             Project project = row.get(Project.class);
             System.out.println(account +" :has: "+ project);
