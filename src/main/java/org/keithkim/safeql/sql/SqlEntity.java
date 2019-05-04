@@ -1,9 +1,9 @@
 package org.keithkim.safeql.sql;
 
-public class Entity<PkType> {
+public class SqlEntity<PkType> {
     public final String name;
 
-    public Entity(String name) {
+    public SqlEntity(String name) {
         this.name = name;
     }
 }

@@ -1,20 +1,24 @@
 package org.keithkim.demo.photos;
 
-import org.keithkim.safeql.Col;
-import org.keithkim.safeql.sql.Entity;
-import org.keithkim.safeql.Table;
+import org.keithkim.safeql.sql.SqlColumn;
+import org.keithkim.safeql.sql.SqlEntity;
+import org.keithkim.safeql.sql.SqlTable;
 
-public class Photo extends Entity<Long> {
-    public final Col<Photo, Long> idCol;
-    public final Col<Photo, Long> userIdCol;
+public class Photo extends SqlEntity<Long> {
+    public final SqlColumn<Photo, Long> idCol;
+    public final SqlColumn<Photo, Long> userIdCol;
 
     public static UserJoinPhoto join(Class<User> userClass) {
-        return new UserJoinPhoto(new Table<>(User.class), new Table<>(Photo.class));
+        return new UserJoinPhoto(new SqlTable<>(User.class), new SqlTable<>(Photo.class));
     }
 
-    public Photo(Table<Photo> table) {
+    public Photo(SqlTable<Photo> table) {
         super("photo");
-        idCol = new Col<>(Photo.class, table.alias, "id");
-        userIdCol = new Col<>(Photo.class, table.alias, "user_id");
+        idCol = new SqlColumn<>(this, "id");
+        userIdCol = new SqlColumn<>(this, "user_id");
+    }
+
+    public SqlColumn<Photo, Long> userIdCol() {
+        return new SqlColumn<>(this, "user_id");
     }
 }

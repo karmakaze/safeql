@@ -1,14 +1,14 @@
 package org.keithkim.demo.quicklog;
 
-import org.keithkim.safeql.Col;
-import org.keithkim.safeql.sql.Entity;
-import org.keithkim.safeql.Table;
+import org.keithkim.safeql.sql.SqlColumn;
+import org.keithkim.safeql.sql.SqlEntity;
+import org.keithkim.safeql.sql.SqlTable;
 
 import java.beans.ConstructorProperties;
 
-public class Project extends Entity<Long> {
-    public final Col<Project, Long> idCol;
-    public final Col<Project, String> nameCol;
+public class Project extends SqlEntity<Long> {
+    public final SqlColumn<Project, Long> idCol;
+    public final SqlColumn<Project, String> nameCol;
 
     public long id;
     public long accountId;
@@ -23,9 +23,9 @@ public class Project extends Entity<Long> {
         this.name = name;
         this.domain = domain;
 
-        Table<Project> table = new Table<>(Project.class);
-        idCol = new Col<>(Project.class, table.alias, "id");
-        nameCol = new Col<>(Project.class, table.alias, "name");
+        SqlTable<Project> table = new SqlTable<>(Project.class);
+        idCol = new SqlColumn<>(this, "id");
+        nameCol = new SqlColumn<>(this, "name");
     }
 
     public String toString() {

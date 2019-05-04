@@ -1,12 +1,14 @@
-package org.keithkim.safeql;
+package org.keithkim.safeql.sql;
 
 import com.google.common.collect.ImmutableSet;
 import org.junit.jupiter.api.Test;
+import org.keithkim.safeql.SelectQuery;
+import org.keithkim.safeql.UnionQuery;
 import org.keithkim.safeql.UnionQuery.Type;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class UnionQueryTest {
+public class SqlUnionTest {
     @Test
     void empty() {
         UnionQuery unionQuery = new UnionQuery();

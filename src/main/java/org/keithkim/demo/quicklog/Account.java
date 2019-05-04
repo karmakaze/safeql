@@ -1,17 +1,17 @@
 package org.keithkim.demo.quicklog;
 
-import org.keithkim.safeql.Col;
-import org.keithkim.safeql.sql.Entity;
-import org.keithkim.safeql.Table;
+import org.keithkim.safeql.sql.SqlColumn;
+import org.keithkim.safeql.sql.SqlEntity;
+import org.keithkim.safeql.sql.SqlTableAlias;
 
 import java.beans.ConstructorProperties;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Account extends Entity<Long> {
-    public final Col<Account, Long> idCol;
-    public final Col<Account, String> fullNameCol;
+public class Account extends SqlEntity<Long> {
+    public final SqlColumn<Account, Long> idCol;
+    public final SqlColumn<Account, String> fullNameCol;
 
     public Long id;
     public String fullName;
@@ -30,9 +30,9 @@ public class Account extends Entity<Long> {
         this.planName = planName;
         this.expires = expires;
 
-        Table<Account> table = new Table<>(Account.class);
-        idCol = new Col<>(Account.class, table.alias, "id");
-        fullNameCol = new Col<>(Account.class, table.alias, "full_name");
+        SqlTableAlias<Account> table = new SqlTableAlias<>(Account.class, "a");
+        idCol = new SqlColumn<>(this, "id");
+        fullNameCol = new SqlColumn<>(this, "full_name");
     }
 
     void addProject(Project project) {

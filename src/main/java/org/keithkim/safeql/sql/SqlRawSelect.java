@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SqlRawSelect<T extends Rows> extends Expr<T> {
+public class SqlRawSelect<E extends SqlEntity> extends Expr<SqlRows<E>> {
     private static final Pattern varPattern = Pattern.compile(":[A-Za-z][A-Za-z0-9_]*");
 
     public SqlRawSelect(String sql) {

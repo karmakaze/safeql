@@ -8,11 +8,12 @@ import org.keithkim.demo.photos.User;
 import org.keithkim.demo.photos.UserJoinPhoto;
 import org.keithkim.demo.quicklog.Account;
 import org.keithkim.demo.quicklog.Project;
-import org.keithkim.safeql.Table;
+import org.keithkim.safeql.sql.SqlTable;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyMap;
 
 public class Main {
     public static void main(String[] args) {
@@ -37,7 +38,7 @@ public class Main {
             Project project = row.get(Project.class);
             System.out.println(account +" :has: "+ project);
         }
-        UserJoinPhoto up = new UserJoinPhoto(new Table<>(User.class, "u"), new Table<>(Photo.class, "p"));
-        System.out.println(up.sql());
+        UserJoinPhoto up = new UserJoinPhoto(new SqlTable<>(User.class, "u"), new SqlTable<>(Photo.class, "p"));
+        System.out.println(up.resolve(emptyMap()));
     }
 }

@@ -1,13 +1,15 @@
 package org.keithkim.demo.photos;
 
-import org.keithkim.safeql.*;
+import org.keithkim.safeql.Join;
+import org.keithkim.safeql.sql.SqlColumn;
+import org.keithkim.safeql.sql.SqlTable;
 
-public class UserJoinPhotoOn<T> extends Join<User, Photo> implements SqlExpression {
-    static UserJoinPhotoOn natural(Table<User> userAlias, Table<Photo> photoAlias) {
-        return new UserJoinPhotoOn(userAlias, new User(userAlias).idCol, photoAlias, new Photo(photoAlias).userIdCol);
+public class UserJoinPhotoOn extends Join<User, Photo> {
+    static UserJoinPhotoOn natural(SqlTable<User> userAlias, SqlTable<Photo> photoAlias) {
+        return new UserJoinPhotoOn(userAlias, new User(userAlias).idCol(), photoAlias, new Photo(photoAlias).userIdCol());
     }
 
-    UserJoinPhotoOn(Table<User> userAlias, Col<User, T> userCol, Table<Photo> photoAlias, Col<Photo, T> photoCol) {
+    UserJoinPhotoOn(SqlTable<User> userAlias, SqlColumn<User, Long> userCol, SqlTable<Photo> photoAlias, SqlColumn<Photo, Long> photoCol) {
         super(userAlias, userCol, photoAlias, photoCol);
     }
 

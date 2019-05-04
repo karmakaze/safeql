@@ -24,6 +24,10 @@ public class Expr<T> {
         return this;
     }
 
+    public String resolveString(Map<String, ?> params) {
+        return resolve(params).toString();
+    }
+
     public String toString() {
         return string;
     }
