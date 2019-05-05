@@ -21,9 +21,6 @@ public class Registry {
     }
 
     public static <T> T using(List<SqlTable<? extends SqlEntity>> tables, Function<Handle, T> handleQuery) {
-        if (tables == null || tables.isEmpty()) {
-            throw new RuntimeException("no tables");
-        }
         Database db = null;
         for (SqlTable<? extends SqlEntity> table : tables) {
             Database db1 = entityDatabase.get(table.entityClass);
@@ -37,6 +34,12 @@ public class Registry {
                 db = db1;
             } else if (db1 != db) {
                 throw new RuntimeException("using entities of different databases");
+            }
+        }
+        if (db == null) {
+            db = defaultDb;
+            if (db == null) {
+                throw new RuntimeException("no default db in Registry");
             }
         }
         return db.jdbi.withHandle(handle -> {
