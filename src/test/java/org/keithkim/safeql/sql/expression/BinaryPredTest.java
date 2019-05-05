@@ -1,12 +1,11 @@
 package org.keithkim.safeql.sql.expression;
 
 import org.junit.jupiter.api.Test;
-import org.keithkim.safeql.sql.expression.BinaryExpr;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.keithkim.safeql.sql.expression.Expr.expr;
 
-public class BinaryExprTest {
+public class BinaryPredTest {
     @Test
     public void resolveSimpleReturnsPrefixedExpr() {
         BinaryExpr<Boolean> trueOrFalse = new BinaryExpr<>(Predicates.TRUE, "OR", Predicates.FALSE);

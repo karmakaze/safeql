@@ -15,7 +15,7 @@ public class NAryExprTest {
 
     @Test
     public void resolveEmptyFunctionReturnsIdentity() {
-        NAryExpr<Boolean> orOfNone = new NAryExpr<>("OR()", expr("FALSE"));
+        NAryExpr<Boolean> orOfNone = new NAryExpr<>("OR()", Predicates.FALSE);
         assertEquals("FALSE", orOfNone.sql());
     }
 
@@ -27,7 +27,7 @@ public class NAryExprTest {
 
     @Test
     public void resolveSingleFunctionReturnsSelf() {
-        NAryExpr<Boolean> andOfSingle = new NAryExpr<>("AND()", expr("TRUE"), expr("v"));
+        NAryExpr<Boolean> andOfSingle = new NAryExpr<>("AND()", Predicates.TRUE, expr("v"));
         assertEquals("v", andOfSingle.sql());
     }
 

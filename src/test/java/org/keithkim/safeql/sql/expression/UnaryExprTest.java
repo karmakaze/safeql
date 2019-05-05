@@ -9,7 +9,7 @@ import static org.keithkim.safeql.sql.expression.Expr.expr;
 public class UnaryExprTest {
     @Test
     public void resolveSimpleReturnsPrefixedExpr() {
-        UnaryExpr<Boolean> notFalse = new UnaryExpr<>("NOT", expr("FALSE"));
+        UnaryExpr<Boolean> notFalse = new UnaryExpr<>("NOT", Predicates.FALSE);
         assertEquals("NOT FALSE", notFalse.sql());
     }
 
