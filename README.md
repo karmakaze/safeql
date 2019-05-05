@@ -25,10 +25,11 @@ SafeQL combines several capabilities together to make great the default. Here th
 
 * functional composition of asynchronous results
 * asynchronous batch querying of entities and relationships
-* type-safe query expression composition
+* type-safe query composition
 * raw queries as typed expressions
 * safe SQL statements generated from expressions
-* composable query templates with smart parameter binding
+* composable templates with smart parameter binding
+* code generator from schema sources
 
 ## Shut up and show me the code already
 
@@ -78,3 +79,32 @@ Map<Project, Admin> notify = Async.combine(asyncProjects, asyncActiveAdmins,
 
 The pure functional elements can be extracted into testable classes and methods separately from the IO performed between them.
 The queries can also be independently tested with known data fixtures.
+
+## Development Status
+
+#### Core complete
+* async functional composition
+* no generated N+1 queries
+
+#### Working design
+* batch querying of entities and relationships
+* mix expression and SQL
+* type-safe expression composition
+* type-safe statement composition
+
+#### In-progress
+* composable templates and smart binding
+* SQL injection protection
+
+#### Not started
+* handle IN () / NOT IN () empty syntax
+* rich CTE's, etc
+* code generator
+
+## How to contribute
+
+* Write blog posts
+* Comment on existing Github issues
+* Submit a Github issue
+* Write tests
+* Fork the repo on GitHub, submit a PR
