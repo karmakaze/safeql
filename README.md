@@ -82,24 +82,29 @@ The queries can also be independently tested with known data fixtures.
 
 ## Development Status
 
-#### Core complete
-* async functional composition
-* no generated N+1 queries
+```
+Done
+[👍] named the project
 
-#### Working design
-* batch querying of entities and relationships
-* mix expression and SQL
-* type-safe expression composition
-* type-safe statement composition
+Core complete
+[✔️] async functional composition
+[✔️] no generated N+1 queries
 
-#### In-progress
-* composable templates and smart binding
-* SQL injection protection
+Working design
+[⚙️] batch querying of entities and relationships
+[⚙️] mix expression and SQL
+[⚙️] type-safe expression composition
+[⚙️] type-safe statement composition
 
-#### Not started
-* handle IN () / NOT IN () empty syntax
-* rich CTE's, etc
-* code generator
+In-progress
+[⚠️] composable templates and smart binding
+[⚠️️] SQL injection protection
+
+Not started
+[ ] handle IN () / NOT IN () empty syntax
+[ ] rich CTE's, etc
+[ ] code generator
+```
 
 ## How to contribute
 
