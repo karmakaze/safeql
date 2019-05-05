@@ -14,7 +14,19 @@ public class SqlIn<T> extends BinaryPred<T> {
         this.range = range;
     }
 
+    @Override
+    public void bind(String name, Object value) {
+        subject.bind(name, value);
+        range.bind(name, value);
+    }
+
     public String sql() {
+        if (range instanceof SqlSet) {
+            SqlSet sqlSet = (SqlSet) range;
+            if (sqlSet.isKnownEmpty()) {
+                return Predicates.FALSE.sql();
+            }
+        }
         return subject.sql() +" IN "+ grouped(range.sql());
     }
 }

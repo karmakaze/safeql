@@ -21,7 +21,7 @@ public class Expr<T> {
         return sql;
     }
 
-    public <V> void bind(String name, V value) {
+    public void bind(String name, Object value) {
         binds.put(name, value);
     }
 
@@ -34,6 +34,15 @@ public class Expr<T> {
         if (!binds.isEmpty()) {
             bind = " BIND: " + Joiner.on(", ").withKeyValueSeparator(":").join(binds);
         }
-        return String.format("<SQL: %s;%s>", sql, bind);
+        return String.format("<SQL: %s;%s>", sql(), bind);
+    }
+
+    protected Object eval() {
+        String sql = sql();
+        if (sql.startsWith(":")) {
+            String name = sql.substring(1);
+            return binds().get(name);
+        }
+        return null;
     }
 }

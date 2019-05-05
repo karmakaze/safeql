@@ -18,6 +18,13 @@ public class NAryExpr<T> extends Expr<T> {
         this.exprs = exprs;
     }
 
+    protected Expr<T> component(int i) {
+        if (0 <= i && i < exprs.length) {
+            return exprs[i];
+        }
+        return null;
+    }
+
     public String sql() {
         if (exprs.length == 0) {
             return identity.sql();

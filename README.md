@@ -86,22 +86,23 @@ The queries can also be independently tested with known data fixtures.
 Done
 [👍] named the project
 
-Core complete
+Core complete (needs test coverage)
 [✔️] async functional composition
 [✔️] no generated N+1 queries
+[✔️️] handle IN (:values) with empty values condition
+[✔️️] handle literal predicate reductions
 
-Working design
+Working design (explore edge cases)
 [⚙️] batch querying of entities and relationships
 [⚙️] mix expression and SQL
 [⚙️] type-safe expression composition
 [⚙️] type-safe statement composition
+[⚙️] composable templates and smart binding
 
 In-progress
-[⚠️] composable templates and smart binding
 [⚠️️] SQL injection protection
 
 Not started
-[ ] handle IN () / NOT IN () empty syntax
 [ ] rich CTE's, etc
 [ ] code generator
 ```
