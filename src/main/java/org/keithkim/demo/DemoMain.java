@@ -7,24 +7,26 @@ import org.keithkim.demo.quicklog.Accounts;
 import org.keithkim.demo.quicklog.Project;
 import org.keithkim.demo.quicklog.Projects;
 import org.keithkim.safeql.Join;
-import org.keithkim.safeql.functional.Completables;
-import org.keithkim.safeql.sql.Database;
-import org.keithkim.safeql.sql.Registry;
+import org.keithkim.safeql.sql.expression.Database;
+import org.keithkim.safeql.sql.expression.Registry;
+import org.keithkim.safeql.sql.statement.RawQueryStatement;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
 
 import static java.util.Arrays.asList;
 
 public class DemoMain {
-    public void demoJoin() {
-        String jdbcUrl = System.getenv("JDBC_URL");
-        String dbUser = System.getenv("DB_USER");
-        String dbPassword = System.getenv("DB_PASSWORD");
-        Database db = new Database(jdbcUrl, dbUser, dbPassword);
-        Registry.registerDefault(db);
+    public void demoCompose() {
+        RawQueryStatement<Account> select = new RawQueryStatement<>("SELECT * FROM account", Account.class);
+        CompletableFuture<List<Account>> asyncAccounts = select.listAsync();
 
+        for (Account account : asyncAccounts.join()) {
+            System.out.println("" + account);
+        }
+    }
+
+    public void demoJoin() {
         Account.Table accountTable = new Account.Table("account", "a");
         Project.Table projectTable = new Project.Table("project", "p");
 
@@ -62,7 +64,7 @@ public class DemoMain {
 
     public static void sleep(long millis) {
         try {
-            Thread.currentThread().sleep(250L);
+            Thread.sleep(250L);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
@@ -76,23 +78,25 @@ public class DemoMain {
         Registry.registerDefault(db);
 
         DemoMain demoMain = new DemoMain();
-        CompletableFuture<Accounts> asyncAccounts = CompletableFuture.supplyAsync(demoMain::demoAccountsWhere);
-        asyncAccounts.thenAcceptAsync(accounts -> {
-            for (Account account : accounts) {
-                System.out.println(account);
-                sleep(100L);
-            }
-        });
-        CompletionStage<Projects> asynchProjects = Completables.chain(asyncAccounts, (accounts) -> demoMain.demoAccountsLoadProjects(accounts));
-        asynchProjects.thenAccept(projects -> {
-            for (Project project : projects) {
-                System.out.println(project);
-                sleep(100L);
-            }
-        });
-        asyncAccounts.join();
-        asynchProjects.toCompletableFuture().join();
+        demoMain.demoCompose();
 
-        demoMain.demoJoin();
+//        CompletableFuture<Accounts> asyncAccounts = CompletableFuture.supplyAsync(demoMain::demoAccountsWhere);
+//        asyncAccounts.thenAcceptAsync(accounts -> {
+//            for (Account account : accounts) {
+//                System.out.println(account);
+//                sleep(100L);
+//            }
+//        });
+//        CompletionStage<Projects> asyncProjects = Completables.chain(asyncAccounts, (accounts) -> demoMain.demoAccountsLoadProjects(accounts));
+//        asyncProjects.thenAccept(projects -> {
+//            for (Project project : projects) {
+//                System.out.println(project);
+//                sleep(100L);
+//            }
+//        });
+//        asyncAccounts.join();
+//        asyncProjects.toCompletableFuture().join();
+//
+//        demoMain.demoJoin();
     }
 }

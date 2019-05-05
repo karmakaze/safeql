@@ -1,7 +1,9 @@
 package org.keithkim.safeql;
 
 import com.google.common.base.Joiner;
-import org.keithkim.safeql.sql.*;
+import org.keithkim.safeql.sql.expression.SqlEntity;
+import org.keithkim.safeql.sql.expression.SqlJoinRows;
+import org.keithkim.safeql.sql.expression.SqlTable;
 import org.keithkim.safeql.template.Expr;
 
 import java.util.ArrayList;
@@ -10,7 +12,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static org.keithkim.safeql.sql.Helpers.group;
+import static org.keithkim.safeql.sql.expression.Helpers.group;
 
 public class Join<L extends SqlEntity, R extends SqlEntity> extends Expr<SqlJoinRows<L, R>> {
     public enum Type {

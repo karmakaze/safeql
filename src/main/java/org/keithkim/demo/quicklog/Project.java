@@ -1,7 +1,7 @@
 package org.keithkim.demo.quicklog;
 
-import org.keithkim.safeql.sql.SqlEntity;
-import org.keithkim.safeql.sql.SqlTable;
+import org.keithkim.safeql.sql.expression.SqlEntity;
+import org.keithkim.safeql.sql.expression.SqlTable;
 
 import java.beans.ConstructorProperties;
 

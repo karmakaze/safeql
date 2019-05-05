@@ -2,11 +2,10 @@ package org.keithkim.safeql;
 
 import org.junit.jupiter.api.Test;
 import org.keithkim.demo.quicklog.Account;
-import org.keithkim.demo.quicklog.AccountAndProject;
 import org.keithkim.demo.quicklog.Project;
 import org.keithkim.safeql.Join.Equate;
 import org.keithkim.safeql.Join.Type;
-import org.keithkim.safeql.sql.SqlJoinRows;
+import org.keithkim.safeql.sql.expression.SqlJoinRows;
 import org.keithkim.safeql.template.Expr;
 
 import static java.util.Collections.emptyMap;

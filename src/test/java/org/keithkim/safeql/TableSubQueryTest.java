@@ -2,7 +2,8 @@ package org.keithkim.safeql;
 
 import org.junit.jupiter.api.Test;
 import org.keithkim.demo.quicklog.Project;
-import org.keithkim.safeql.sql.*;
+import org.keithkim.safeql.sql.expression.SqlRows;
+import org.keithkim.safeql.sql.expression.SqlSelect;
 import org.keithkim.safeql.template.Expr;
 
 import static java.util.Arrays.asList;
