@@ -7,10 +7,13 @@ import org.keithkim.demo.quicklog.Accounts;
 import org.keithkim.demo.quicklog.Project;
 import org.keithkim.demo.quicklog.Projects;
 import org.keithkim.safeql.Join;
+import org.keithkim.safeql.functional.Completables;
 import org.keithkim.safeql.sql.Database;
 import org.keithkim.safeql.sql.Registry;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 
 import static java.util.Arrays.asList;
 
@@ -49,18 +52,20 @@ public class DemoMain {
     public Accounts demoAccountsWhere() {
         Account.Table accountTable = new Account.Table("account", null);
         Accounts accounts = accountTable.where("id >= 1000");
-        for (Account account : accounts) {
-            System.out.println(account);
-        }
         return accounts;
     }
 
     public Projects demoAccountsLoadProjects(Accounts accounts) {
         Projects projects = accounts.loadProjects();
-        for (Project project : projects) {
-            System.out.println(project);
-        }
         return projects;
+    }
+
+    public static void sleep(long millis) {
+        try {
+            Thread.currentThread().sleep(250L);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     public static void main(String[] args) {
@@ -71,8 +76,22 @@ public class DemoMain {
         Registry.registerDefault(db);
 
         DemoMain demoMain = new DemoMain();
-        Accounts accounts = demoMain.demoAccountsWhere();
-        Projects projects = demoMain.demoAccountsLoadProjects(accounts);
+        CompletableFuture<Accounts> asyncAccounts = CompletableFuture.supplyAsync(demoMain::demoAccountsWhere);
+        asyncAccounts.thenAcceptAsync(accounts -> {
+            for (Account account : accounts) {
+                System.out.println(account);
+                sleep(100L);
+            }
+        });
+        CompletionStage<Projects> asynchProjects = Completables.chain(asyncAccounts, (accounts) -> demoMain.demoAccountsLoadProjects(accounts));
+        asynchProjects.thenAccept(projects -> {
+            for (Project project : projects) {
+                System.out.println(project);
+                sleep(100L);
+            }
+        });
+        asyncAccounts.join();
+        asynchProjects.toCompletableFuture().join();
 
         demoMain.demoJoin();
     }

@@ -61,7 +61,7 @@ public class Completables {
     }
 
     public static <T, U> CompletionStage<U> chain(CompletionStage<T> a,
-                                                  Function<T, U> fn) {
+                                                  Function<? super T, ? extends U> fn) {
         return a.thenApply(fn);
     }
 
