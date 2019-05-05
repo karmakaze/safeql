@@ -8,7 +8,11 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class Completables {
+public class Async {
+    public static void join(CompletableFuture<?>... futures) {
+        CompletableFuture.allOf(futures);
+    }
+
     public static <T> CompletionStage<Void> consume(CompletionStage<T> a,
                                                     Consumer<? super T> consumer) {
         return a.thenAccept(consumer);
