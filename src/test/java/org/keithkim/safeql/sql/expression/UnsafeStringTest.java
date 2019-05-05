@@ -1,6 +1,7 @@
-package org.keithkim.safeql.template;
+package org.keithkim.safeql.sql.expression;
 
 import org.junit.jupiter.api.Test;
+import org.keithkim.safeql.sql.expression.UnsafeString;
 
 import static org.junit.jupiter.api.Assertions.*;
 

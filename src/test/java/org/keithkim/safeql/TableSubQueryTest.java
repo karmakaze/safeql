@@ -2,12 +2,9 @@ package org.keithkim.safeql;
 
 import org.junit.jupiter.api.Test;
 import org.keithkim.demo.quicklog.Project;
-import org.keithkim.safeql.sql.expression.SqlRows;
 import org.keithkim.safeql.sql.expression.SqlSelect;
-import org.keithkim.safeql.template.Expr;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TableSubQueryTest {
@@ -16,8 +13,7 @@ public class TableSubQueryTest {
         Project.Table projectTable = new Project.Table("project", null);
 
         SqlSelect<Project> selectQuery = new SqlSelect<>(projectTable, asList(projectTable.idCol, projectTable.nameCol));
-        Expr<SqlRows<Project>> resolved = selectQuery.resolve(emptyMap());
-        assertEquals("SELECT project.id, project.name FROM project", resolved.toString());
+        assertEquals("SELECT project.id, project.name FROM project", selectQuery.sql());
     }
 
     @Test

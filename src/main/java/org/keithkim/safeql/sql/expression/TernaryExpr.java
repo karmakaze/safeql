@@ -1,6 +1,4 @@
-package org.keithkim.safeql.template;
-
-import java.util.Map;
+package org.keithkim.safeql.sql.expression;
 
 import static org.keithkim.safeql.sql.expression.Helpers.group;
 
@@ -20,12 +18,7 @@ public class TernaryExpr<T> extends Expr<T> {
         this.expr3 = expr3;
     }
 
-    public Expr<T> resolve(Map<String, ?> params) {
-        String string = group(expr1.resolve(params).toString()) +
-                " "+ operator1 + " " +
-                group(expr2.resolve(params).toString()) +
-                " "+ operator2 + " " +
-                group(expr3.resolve(params).toString());
-        return new Expr<>(string);
+    public String sql() {
+        return group(expr1.sql()) + " "+ operator1 + " " + group(expr2.sql()) + " "+ operator2 + " " + group(expr3.sql());
     }
 }

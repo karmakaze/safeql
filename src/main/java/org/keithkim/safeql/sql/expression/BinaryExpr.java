@@ -1,6 +1,4 @@
-package org.keithkim.safeql.template;
-
-import java.util.Map;
+package org.keithkim.safeql.sql.expression;
 
 public class BinaryExpr<T> extends Expr<T> {
     private final NAryExpr<T> nAryExpr;
@@ -10,7 +8,7 @@ public class BinaryExpr<T> extends Expr<T> {
         this.nAryExpr = new NAryExpr<>(operator, null, left, right);
     }
 
-    public Expr<T> resolve(Map<String, ?> params) {
-        return nAryExpr.resolve(params);
+    public String sql() {
+        return nAryExpr.sql();
     }
 }

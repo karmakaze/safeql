@@ -1,14 +1,13 @@
 package org.keithkim.safeql;
 
 import com.google.common.base.Joiner;
+import org.keithkim.safeql.sql.expression.Expr;
 import org.keithkim.safeql.sql.expression.SqlEntity;
 import org.keithkim.safeql.sql.expression.SqlJoinRows;
 import org.keithkim.safeql.sql.expression.SqlTable;
-import org.keithkim.safeql.template.Expr;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -28,8 +27,8 @@ public class Join<L extends SqlEntity, R extends SqlEntity> extends Expr<SqlJoin
             this.string = string;
         }
 
-        public Expr<Type> resolve() {
-            return Expr.expr(string);
+        public String sql() {
+            return string;
         }
     }
 
@@ -86,15 +85,15 @@ public class Join<L extends SqlEntity, R extends SqlEntity> extends Expr<SqlJoin
         this.equates = asList(new Equate(lCol, rCol), new Equate(lCol2, rCol2), new Equate(lCol3, rCol3));
     }
 
-    public Expr<SqlJoinRows<L, R>> resolve(Map<String, ?> params) {
-        return Expr.expr(left.resolveString(params) +" "+ type.resolve() +" "+ right.resolveString(params) + onClause(params));
+    public String sql() {
+        return left.sql() +" "+ type.sql() +" "+ right.sql() + onClause();
     }
 
-    protected String onClause(Map<String, ?> params) {
+    protected String onClause() {
         if (type == Type.CROSS_JOIN) {
             return "";
         }
-        return " ON "+ Joiner.on(" AND ").join(equates.stream().map(e -> e.resolveString(params)).collect(toList()));
+        return " ON "+ Joiner.on(" AND ").join(equates.stream().map(e -> e.sql()).collect(toList()));
     }
 
     public Join<L, R> where(Cond2<L, R> cond) {
@@ -118,17 +117,8 @@ public class Join<L extends SqlEntity, R extends SqlEntity> extends Expr<SqlJoin
             this.rCol = rCol;
         }
 
-        public Expr<Boolean> resolve(Map<String, ?> params) {
-            String lColString = group(lCol.resolveString(params));
-            String rColString = group(rCol.resolveString(params));
-            return Expr.expr(lColString +" = "+ rColString);
-        }
-
-        private String colString(SqlTable<?> table, SqlTable<?>.SqlColumn<T> col, Map<String, ?> params) {
-            List<String> colName = new ArrayList<>();
-            table.alias().ifPresent(alias -> colName.add(alias));
-            colName.add(col.resolveString(params));
-            return Joiner.on(".").join(colName);
+        public String sql() {
+            return group(lCol.sql()) +" = "+ group(rCol.sql());
         }
     }
 }

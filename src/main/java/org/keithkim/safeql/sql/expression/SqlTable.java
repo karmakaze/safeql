@@ -1,7 +1,6 @@
 package org.keithkim.safeql.sql.expression;
 
 import com.google.common.base.Joiner;
-import org.keithkim.safeql.template.Expr;
 import org.keithkim.safeql.util.System;
 
 import java.util.*;
@@ -27,15 +26,15 @@ public class SqlTable<E extends SqlEntity> extends Expr<E> {
         this.alias = alias;
     }
 
-    public Expr<E> resolve(Map<String, ?> params) {
+    public String sql() {
         if (alias != null) {
-            return Expr.expr(group(super.toString()) +" "+ alias);
+            return group(super.sql()) +" "+ alias;
         }
-        return Expr.expr(group(super.toString()));
+        return super.sql();
     }
 
     public String aliasOrTable() {
-        return alias().orElse(super.toString());
+        return alias().orElse(super.sql());
     }
 
     public Optional<String> alias() {
@@ -58,7 +57,7 @@ public class SqlTable<E extends SqlEntity> extends Expr<E> {
             whereCriteria = "";
         }
         return Registry.using(singletonList(this), handle -> {
-            return handle.createQuery("SELECT * FROM " + this.toString() + whereCriteria)
+            return handle.createQuery("SELECT * FROM " + this.sql() + whereCriteria)
                     .mapTo(entityClass)
                     .list();
         });
@@ -78,11 +77,11 @@ public class SqlTable<E extends SqlEntity> extends Expr<E> {
             this.alias = alias;
         }
 
-        public Expr<T> resolve(Map<String, ?> params) {
+        public String sql() {
             List<String> name = new ArrayList<>(2);
             name.add(SqlTable.this.aliasOrTable());
             name.add(aliasOrColumn());
-            return Expr.expr(group(Joiner.on(".").join(name)));
+            return group(Joiner.on(".").join(name));
         }
 
         public String selectTerm(Map<String, ?> params) {
@@ -91,13 +90,13 @@ public class SqlTable<E extends SqlEntity> extends Expr<E> {
             if (SqlTable.this.entityClass != System.Table.none.entityClass) {
                 name.add(SqlTable.this.aliasOrTable());
             }
-            name.add(super.toString());
+            name.add(super.sql());
             String dotName = Joiner.on(".").join(name);
             return alias == null ? dotName : dotName +" "+ alias;
         }
 
         public String aliasOrColumn() {
-            return alias().orElse(super.toString());
+            return alias().orElse(super.sql());
         }
 
         public Optional<String> alias() {

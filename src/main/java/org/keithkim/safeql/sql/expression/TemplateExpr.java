@@ -1,6 +1,6 @@
-package org.keithkim.safeql.template;
+package org.keithkim.safeql.sql.expression;
 
-import com.google.common.collect.ImmutableMap;
+import org.keithkim.safeql.sql.expression.Expr;
 
 import java.util.Map;
 
@@ -20,13 +20,5 @@ public class TemplateExpr<T> extends Expr<T> {
             }
         }
         return new Expr<>(rendered);
-    }
-
-    public static void main(String[] args) {
-        TemplateExpr<String> templateExpr = new TemplateExpr<>("Hello :name :name_1 :name12 :name12_3");
-        System.out.println(templateExpr);
-
-        Expr<String> expr = templateExpr.resolve(ImmutableMap.of("name", "Keith", "name12", "twelve"));
-        System.out.println(expr);
     }
 }

@@ -1,4 +1,4 @@
-package org.keithkim.safeql.template;
+package org.keithkim.safeql.sql.expression;
 
 import java.util.Objects;
 

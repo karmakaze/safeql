@@ -2,8 +2,6 @@ package org.keithkim.safeql.sql.expression;
 
 import org.junit.jupiter.api.Test;
 import org.keithkim.demo.quicklog.Project;
-import org.keithkim.safeql.sql.expression.SqlTable;
-import org.keithkim.safeql.template.Expr;
 
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,36 +42,32 @@ public class SqlColumnTest {
     @Test
     public void noAliases_resolve_returnsTableDotColumnName() {
         Project.Table projectTable = new Project.Table("project", null);
-        SqlTable<Project>.SqlColumn<Long> accountIdCol = projectTable.accountIdCol(null);
+        SqlTable<Project>.SqlColumn<Long> sqlColumn = projectTable.accountIdCol(null);
 
-        Expr<Long> resolved = accountIdCol.resolve(emptyMap());
-        assertEquals("project.account_id", resolved.toString());
+        assertEquals("project.account_id", sqlColumn.sql());
     }
 
     @Test
     public void withTableAlias_resolve_returnsAliasDotColumnName() {
         Project.Table projectTable = new Project.Table("project", "p");
-        SqlTable<Project>.SqlColumn<Long> accountIdCol = projectTable.accountIdCol(null);
+        SqlTable<Project>.SqlColumn<Long> sqlColumn = projectTable.accountIdCol(null);
 
-        Expr<Long> resolved = accountIdCol.resolve(emptyMap());
-        assertEquals("p.account_id", resolved.toString());
+        assertEquals("p.account_id", sqlColumn.sql());
     }
 
     @Test
     public void noTableAliasColumnAlias_resolve_returnsColumnNameWithAlias() {
         Project.Table projectTable = new Project.Table("project", null);
-        SqlTable<Project>.SqlColumn<Long> accountIdCol = projectTable.accountIdCol("a_id");
+        SqlTable<Project>.SqlColumn<Long> sqlColumn = projectTable.accountIdCol("a_id");
 
-        Expr<Long> resolved = accountIdCol.resolve(emptyMap());
-        assertEquals("project.a_id", resolved.toString());
+        assertEquals("project.a_id", sqlColumn.sql());
     }
 
     @Test
     public void withTableAlias_resolve_returnsQualifiedAlias() {
         Project.Table projectTable = new Project.Table("project", "p");
-        SqlTable<Project>.SqlColumn<Long> accountIdCol = projectTable.accountIdCol("a_id");
+        SqlTable<Project>.SqlColumn<Long> sqlColumn = projectTable.accountIdCol("a_id");
 
-        Expr<Long> resolved = accountIdCol.resolve(emptyMap());
-        assertEquals("p.a_id", resolved.toString());
+        assertEquals("p.a_id", sqlColumn.sql());
     }
 }

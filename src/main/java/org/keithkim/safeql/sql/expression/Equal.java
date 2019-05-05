@@ -1,6 +1,4 @@
-package org.keithkim.safeql.template;
-
-import java.util.Map;
+package org.keithkim.safeql.sql.expression;
 
 import static org.keithkim.safeql.sql.expression.Helpers.group;
 
@@ -14,7 +12,7 @@ public class Equal<T> extends Expr<Boolean> {
         this.right = right;
     }
 
-    public Expr<Boolean> resolve(Map<String, ?> params) {
-        return Expr.expr(group(left.toString()) +" = "+ group(right.toString()));
+    public String sql() {
+        return group(left.toString()) +" = "+ group(right.toString());
     }
 }

@@ -1,13 +1,11 @@
 package org.keithkim.safeql.sql.expression;
 
 import com.google.common.base.Joiner;
-import org.keithkim.safeql.template.Expr;
 import org.keithkim.safeql.util.System;
 
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toList;
 
 public class SqlSelect<E extends SqlEntity> extends Expr<SqlRows<E>> {
@@ -24,15 +22,16 @@ public class SqlSelect<E extends SqlEntity> extends Expr<SqlRows<E>> {
         return asTableExpr(null);
     }
     public <E extends SqlEntity> SqlTable<E> asTableExpr(String alias) {
-        return new SqlTable<E>(table.entityClass, resolve(emptyMap()).toString(), alias);
+        return new SqlTable<E>(table.entityClass, sql(), alias);
     }
 
-    public Expr<SqlRows<E>> resolve(Map<String, ?> params) {
-        List<String> cols = columns.stream().map(c -> c.selectTerm(params)).collect(toList());
+    public String sql() {
+        Map<String, ?> binds = binds();
+        List<String> cols = columns.stream().map(c -> c.selectTerm(binds)).collect(toList());
         String fromTable = "";
         if (table != System.Table.none) {
-            fromTable = " FROM "+ table.resolve(params);
+            fromTable = " FROM "+ table.sql();
         }
-        return Expr.expr(String.format("SELECT %s" + fromTable, Joiner.on(", ").join(cols)));
+        return String.format("SELECT %s" + fromTable, Joiner.on(", ").join(cols));
     }
 }

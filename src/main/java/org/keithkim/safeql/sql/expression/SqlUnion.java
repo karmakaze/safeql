@@ -1,9 +1,9 @@
 package org.keithkim.safeql.sql.expression;
 
 import com.google.common.base.Joiner;
-import org.keithkim.safeql.template.Expr;
 
-import java.util.Map;
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 
 public class SqlUnion<T> extends Expr<T> {
     private final Type type;
@@ -19,23 +19,23 @@ public class SqlUnion<T> extends Expr<T> {
         this.tables = tables;
     }
 
-    public Expr<T> resolve(Map<String, ?> params) {
-        return Expr.expr(Joiner.on(" " + type.toString() + " ").join(tables));
+    public String sql() {
+        return Joiner.on(" " + type.toString() + " ").join(asList(tables).stream().map(SqlTable::sql).collect(toList()));
     }
 
 //    public void bind(String name, Object value) {
-//        params().put(name, Optional.of(value));
+//        bindings().put(name, Optional.of(value));
 //        for (SqlTable<?> table : tables) {
 //            table.bind(name, value);
 //        }
 //    }
 
-//    public Map<String, Optional<?>> params() {
-//        Map<String, Optional<?>> params = new HashMap<>();
+//    public Map<String, Optional<?>> bindings() {
+//        Map<String, Optional<?>> bindings = new HashMap<>();
 //        for (SelectQuery q : selectQueries) {
-//            params.putAll(q.params());
+//            bindings.putAll(q.bindings());
 //        }
-//        return params;
+//        return bindings;
 //    }
 
     public enum Type {

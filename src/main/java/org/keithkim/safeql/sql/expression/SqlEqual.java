@@ -1,9 +1,5 @@
 package org.keithkim.safeql.sql.expression;
 
-import org.keithkim.safeql.template.Expr;
-
-import java.util.Map;
-
 import static org.keithkim.safeql.sql.expression.Helpers.group;
 
 public class SqlEqual<T> {
@@ -15,21 +11,21 @@ public class SqlEqual<T> {
         this.right = right;
     }
 
-    public Expr<Boolean> render(Map<String, ?> params) {
-        String leftString = left.resolve(params).toString();
-        String rightString = right.resolve(params).toString();
+    public String sql() {
+        String leftString = left.sql();
+        String rightString = right.sql();
         if ("NULL".equalsIgnoreCase(leftString)) {
             if ("NULL".equalsIgnoreCase(rightString)) {
                 // TODO do we ever want this to mean TRUE?
-                return new Expr<>("FALSE");
+                return "FALSE";
             } else {
-                return new Expr<>(group(rightString) + " IS NULL");
+                return group(rightString) + " IS NULL";
             }
         } else {
             if ("NULL".equalsIgnoreCase(rightString)) {
-                return new Expr<>(group(leftString) + " IS NULL");
+                return group(leftString) + " IS NULL";
             } else {
-                return new Expr<>(group(leftString) + " = " + group(rightString));
+                return group(leftString) + " = " + group(rightString);
             }
         }
     }

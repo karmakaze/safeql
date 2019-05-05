@@ -1,9 +1,9 @@
 package org.keithkim.safeql.sql.statement;
 
 import com.google.common.base.Joiner;
+import org.keithkim.safeql.sql.expression.Expr;
 import org.keithkim.safeql.sql.expression.SqlEntity;
 import org.keithkim.safeql.sql.expression.SqlTable;
-import org.keithkim.safeql.template.Expr;
 
 import java.util.List;
 import java.util.Optional;
