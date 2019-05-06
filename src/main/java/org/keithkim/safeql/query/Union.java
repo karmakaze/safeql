@@ -1,12 +1,14 @@
 package org.keithkim.safeql.query;
 
 import com.google.common.base.Joiner;
+import lombok.EqualsAndHashCode;
 import org.keithkim.safeql.expression.Expr;
 import org.keithkim.safeql.schema.Table;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
+@EqualsAndHashCode
 public class Union<T> extends Expr<T> {
     private final Type type;
     private final Table[] tables;

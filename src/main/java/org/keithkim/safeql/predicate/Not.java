@@ -1,5 +1,8 @@
 package org.keithkim.safeql.predicate;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class Not extends Predicate {
     private final Predicate pred;
 

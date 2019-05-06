@@ -1,8 +1,9 @@
 package org.keithkim.safeql.predicate;
 
-import org.keithkim.safeql.expression.BinaryExpr;
+import lombok.EqualsAndHashCode;
 import org.keithkim.safeql.expression.Expr;
 
+@EqualsAndHashCode
 public class Predicate extends Expr<Boolean> {
     public Predicate(String sql) {
         super(sql);

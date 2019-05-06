@@ -1,5 +1,8 @@
 package org.keithkim.safeql.expression;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class TernaryExpr<T> extends Expr<T> {
     private final Expr<T> expr1;
     private final String operator1;

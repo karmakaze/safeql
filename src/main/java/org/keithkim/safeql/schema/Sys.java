@@ -1,5 +1,8 @@
 package org.keithkim.safeql.schema;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class Sys {
     public static class Table {
         public static org.keithkim.safeql.schema.Table none = new org.keithkim.safeql.schema.Table(Table.class);

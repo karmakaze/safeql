@@ -1,6 +1,7 @@
 package org.keithkim.safeql.type;
 
 import com.google.common.base.Joiner;
+import lombok.EqualsAndHashCode;
 import org.keithkim.safeql.expression.Expr;
 
 import java.util.Collection;
@@ -8,6 +9,7 @@ import java.util.Collection;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
+@EqualsAndHashCode
 public class Set<T> extends Expr<java.util.Set> {
     private final Collection<Expr<T>> elements;
 

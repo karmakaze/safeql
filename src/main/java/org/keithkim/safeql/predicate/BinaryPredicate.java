@@ -1,8 +1,10 @@
 package org.keithkim.safeql.predicate;
 
+import lombok.EqualsAndHashCode;
 import org.keithkim.safeql.expression.BinaryExpr;
 import org.keithkim.safeql.expression.Expr;
 
+@EqualsAndHashCode
 public class BinaryPredicate<T> extends Predicate {
     private final BinaryExpr<T> binaryExpr;
 

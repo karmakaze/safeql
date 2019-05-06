@@ -1,5 +1,6 @@
 package org.keithkim.safeql.statement;
 
+import lombok.EqualsAndHashCode;
 import org.keithkim.safeql.schema.Entity;
 import org.keithkim.safeql.schema.Table;
 
@@ -8,6 +9,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.keithkim.safeql.util.StringHelpers.snakeCase;
 
+@EqualsAndHashCode
 public class RawQueryStatement<E extends Entity> implements SingleQueryStatement<E>, ListQueryStatement<E> {
     private final String sql;
     private final Class<E> entityClass;

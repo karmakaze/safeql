@@ -1,6 +1,7 @@
 package org.keithkim.safeql.query;
 
 import com.google.common.base.Joiner;
+import lombok.EqualsAndHashCode;
 import org.keithkim.safeql.expression.Expr;
 import org.keithkim.safeql.schema.Entity;
 import org.keithkim.safeql.schema.Table;
@@ -12,6 +13,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
+@EqualsAndHashCode
 public class Join<L extends Entity, R extends Entity> extends Expr<JoinRows<L, R>> {
     public enum Type {
         JOIN("JOIN"),

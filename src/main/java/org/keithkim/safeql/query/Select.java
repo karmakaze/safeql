@@ -1,6 +1,7 @@
 package org.keithkim.safeql.query;
 
 import com.google.common.base.Joiner;
+import lombok.EqualsAndHashCode;
 import org.keithkim.safeql.expression.Expr;
 import org.keithkim.safeql.schema.Entity;
 import org.keithkim.safeql.schema.Sys;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 
+@EqualsAndHashCode
 public class Select<E extends Entity> extends Expr<Rows<E>> {
     private final Table table;
     private final List<Table<E>.SqlColumn<?>> columns;

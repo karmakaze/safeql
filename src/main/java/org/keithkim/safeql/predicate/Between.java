@@ -1,8 +1,10 @@
 package org.keithkim.safeql.predicate;
 
+import lombok.EqualsAndHashCode;
 import org.keithkim.safeql.expression.Expr;
 import org.keithkim.safeql.expression.TernaryExpr;
 
+@EqualsAndHashCode
 public class Between<T> extends Predicate {
     private final TernaryExpr<T> ternaryExpr;
 

@@ -1,12 +1,14 @@
 package org.keithkim.safeql.expression;
 
 import com.google.common.base.Joiner;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
+@EqualsAndHashCode
 public class NAryExpr<T> extends Expr<T> {
     private final Expr<T> identity;
     private final Expr<T>[] exprs;

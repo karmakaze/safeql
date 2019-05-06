@@ -1,6 +1,7 @@
 package org.keithkim.safeql.schema;
 
 import com.google.common.base.Joiner;
+import lombok.EqualsAndHashCode;
 import org.keithkim.safeql.expression.Expr;
 import org.keithkim.safeql.statement.Registry;
 
@@ -8,6 +9,7 @@ import java.util.*;
 
 import static java.util.Collections.singletonList;
 
+@EqualsAndHashCode
 public class Table<E extends Entity> extends Expr<E> {
     public final Class<E> entityClass;
     private final String alias;

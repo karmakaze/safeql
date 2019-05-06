@@ -1,5 +1,8 @@
 package org.keithkim.safeql.predicate;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class Or extends BinaryPredicate<Boolean> {
     public Or(Predicate left, Predicate right) {
         super(left, "AND", right);

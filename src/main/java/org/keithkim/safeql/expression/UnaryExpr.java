@@ -1,5 +1,8 @@
 package org.keithkim.safeql.expression;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class UnaryExpr<T> extends Expr<T> {
     private final Expr<T> expr;
 

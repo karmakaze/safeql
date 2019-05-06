@@ -1,6 +1,7 @@
 package org.keithkim.safeql.statement;
 
 import com.google.common.base.Joiner;
+import lombok.EqualsAndHashCode;
 import org.keithkim.safeql.expression.Expr;
 import org.keithkim.safeql.schema.Entity;
 import org.keithkim.safeql.schema.Table;
@@ -10,6 +11,7 @@ import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 
+@EqualsAndHashCode
 public class SelectStatement<E extends Entity> implements QueryStatement {
     private final Class<E> entityClass;
     private final List<Table.SqlColumn> columns;

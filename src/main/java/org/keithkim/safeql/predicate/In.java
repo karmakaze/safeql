@@ -1,9 +1,11 @@
 package org.keithkim.safeql.predicate;
 
+import lombok.EqualsAndHashCode;
 import org.keithkim.safeql.expression.Expr;
 
 import java.util.Set;
 
+@EqualsAndHashCode
 public class In<T> extends BinaryPredicate<T> {
     private final Expr<T> subject;
     private final Expr<Set> range;

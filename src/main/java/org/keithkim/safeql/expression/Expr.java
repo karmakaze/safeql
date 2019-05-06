@@ -1,6 +1,7 @@
 package org.keithkim.safeql.expression;
 
 import com.google.common.base.Joiner;
+import lombok.EqualsAndHashCode;
 
 import java.util.Map;
 import java.util.Objects;
@@ -8,6 +9,7 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@EqualsAndHashCode
 public class Expr<T> {
     private static final Pattern GROUPED_NAME_PATTERN = Pattern.compile("\\(*:([A-Za-z_][A-Za-z_0-9]*)\\)*");
     private static final Pattern TERM_PATTERN = Pattern.compile("[':.A-Za-z0-9_]+");
@@ -51,18 +53,6 @@ public class Expr<T> {
     }
 
     @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof Expr)) {
-            return false;
-        }
-        Expr that = (Expr) other;
-        return Objects.equals(this.sql, that.sql) && Objects.equals(this.binds, that.binds);
-    }
-
-    public int hashCode() {
-        return Objects.hashCode(sql) * 997 + Objects.hashCode(binds) * 991;
-    }
-
     public String toString() {
         String bind = "";
         if (!binds.isEmpty()) {

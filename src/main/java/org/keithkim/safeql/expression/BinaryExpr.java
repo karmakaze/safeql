@@ -1,5 +1,8 @@
 package org.keithkim.safeql.expression;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class BinaryExpr<T> extends Expr<T> {
     private final NAryExpr<T> nAryExpr;
 
