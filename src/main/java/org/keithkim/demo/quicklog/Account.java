@@ -1,15 +1,14 @@
 package org.keithkim.demo.quicklog;
 
-import org.keithkim.safeql.sql.expression.SqlEntity;
-import org.keithkim.safeql.sql.expression.SqlTable;
+import org.keithkim.safeql.schema.Entity;
 
 import java.beans.ConstructorProperties;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Account extends SqlEntity<Long> {
-    public static class Table extends SqlTable<Account> {
+public class Account extends Entity<Long> {
+    public static class Table extends org.keithkim.safeql.schema.Table<Account> {
         public Table(String tableExpr, String alias) {
             super(Account.class, tableExpr, alias);
         }

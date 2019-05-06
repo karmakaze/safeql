@@ -1,6 +1,6 @@
 package org.keithkim.demo.quicklog;
 
-import org.keithkim.safeql.sql.expression.Registry;
+import org.keithkim.safeql.statement.Registry;
 
 import java.util.*;
 

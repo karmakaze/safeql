@@ -6,10 +6,10 @@ import org.keithkim.demo.quicklog.Account;
 import org.keithkim.demo.quicklog.Accounts;
 import org.keithkim.demo.quicklog.Project;
 import org.keithkim.demo.quicklog.Projects;
-import org.keithkim.safeql.Join;
-import org.keithkim.safeql.sql.expression.Database;
-import org.keithkim.safeql.sql.expression.Registry;
-import org.keithkim.safeql.sql.statement.RawQueryStatement;
+import org.keithkim.safeql.query.Join;
+import org.keithkim.safeql.statement.Database;
+import org.keithkim.safeql.statement.Registry;
+import org.keithkim.safeql.statement.RawQueryStatement;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
