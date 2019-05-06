@@ -33,6 +33,9 @@ SafeQL combines several capabilities together to make great the default. Here th
 
 ## Shut up and show me the code already
 
+* browse [source packages](https://github.com/karmakaze/safeql/tree/master/src/main/java/org/keithkim/safeql)
+* browse [test packages](https://github.com/karmakaze/safeql/tree/master/src/test/java/org/keithkim/safeql)
+
 ### Querying a single table
 
 ```
