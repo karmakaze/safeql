@@ -49,7 +49,7 @@ The `Accounts` and `Projects` types are subclasses of List<Account> and List<Pro
 
 The `projects` returned value of `loadProjects` can be discarded as each account in `accounts` aleady has its projects associated upon loading.
 
-What with all the `get()`s? Queries return async futures which can be funtionally chained. Calling `get()` or `join()` synchronously waits for the result.
+What with all the `get()` calls? Queries return async futures which can be funtionally chained. Calling `get()` or `join()` synchronously waits for the result.
 
 ### Functional composition
 
