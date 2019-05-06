@@ -10,6 +10,69 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ExprTest {
     @Test
+    void null_equals_returnsFalse() {
+        Expr<String> a = new Expr<>("SELECT * FROM account");
+
+        assertFalse(a.equals(null));
+    }
+
+    @Test
+    void incompatibleType_equals_returnsFalse() {
+        Expr<String> a = new Expr<>("SELECT * FROM account");
+        String unrelated = "SELECT * FROM account";
+
+        assertFalse(a.equals(unrelated));
+    }
+
+    @Test
+    void sameButDistinctIdentity_equals_returnsTrue() {
+        Expr<String> a = new Expr<>("SELECT * FROM account");
+        Expr<String> b = new Expr<>(new StringBuilder("SELECT *").append(" FROM account").toString());
+
+        assertEquals(a, b);
+    }
+
+    @Test
+    void identicallyConstructed_equals_returnsTrue() {
+        Expr<String> a = new Expr<>("SELECT * FROM account");
+        Expr<String> b = new Expr<>("SELECT * FROM account");
+
+        assertEquals(a, b);
+    }
+
+    @Test
+    void different_equals_returnsFalse() {
+        Expr<String> a = new Expr<>("SELECT * FROM account");
+        Expr<String> b = new Expr<>("SELECT * FROM project");
+
+        assertNotEquals(a, b);
+    }
+
+    @Test
+    void sameButDistinctIdentity_hashCode_match() {
+        Expr<String> a = new Expr<>("SELECT * FROM account");
+        Expr<String> b = new Expr<>(new StringBuilder("SELECT *").append(" FROM account").toString());
+
+        assertEquals(a.hashCode(), b.hashCode());
+    }
+
+    @Test
+    void identicallyConstructed_hashCode_match() {
+        Expr<String> a = new Expr<>("SELECT * FROM account");
+        Expr<String> b = new Expr<>("SELECT * FROM account");
+
+        assertEquals(a.hashCode(), b.hashCode());
+    }
+
+    @Test
+    void different_hashCode_dontMatch() {
+        Expr<String> a = new Expr<>("SELECT * FROM account");
+        Expr<String> b = new Expr<>("SELECT * FROM project");
+
+        assertNotEquals(a.hashCode(), b.hashCode());
+    }
+
+    @Test
     void nobinds_sql_returnsLiteral() {
         Expr<String> subject = new Expr<>("SELECT * FROM account");
 

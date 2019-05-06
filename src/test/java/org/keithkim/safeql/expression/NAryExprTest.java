@@ -42,4 +42,24 @@ public class NAryExprTest {
         NAryExpr<String> concatPrefixSuffix = new NAryExpr<>("CONCAT()", expr("''"), expr("'a'"), expr("CONCAT('b', 'c')"));
         assertEquals("CONCAT('a', (CONCAT('b', 'c')))", concatPrefixSuffix.sql());
     }
+
+    @Test
+    public void componentWithValidIndex_returnsExpr() {
+        NAryExpr<String> concatABC = new NAryExpr<>("||", expr("''"), expr("a"), expr("b"), expr("c"));
+        assertEquals(expr("a"), concatABC.component(0));
+        assertEquals(expr("b"), concatABC.component(1));
+        assertEquals(expr("c"), concatABC.component(2));
+    }
+
+    @Test
+    public void componentWithNegativeIndex_returnsNull() {
+        NAryExpr<String> concatABC = new NAryExpr<>("||", expr("''"), expr("a"), expr("b"), expr("c"));
+        assertEquals(null, concatABC.component(-1));
+    }
+
+    @Test
+    public void componentWithOutOfBoundIndex_returnsNull() {
+        NAryExpr<String> concatABC = new NAryExpr<>("||", expr("''"), expr("a"), expr("b"), expr("c"));
+        assertEquals(null, concatABC.component(3));
+    }
 }

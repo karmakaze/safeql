@@ -3,6 +3,7 @@ package org.keithkim.safeql.expression;
 import com.google.common.base.Joiner;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -47,6 +48,19 @@ public class Expr<T> {
 
     public Map<String, ?> binds() {
         return binds;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Expr)) {
+            return false;
+        }
+        Expr that = (Expr) other;
+        return Objects.equals(this.sql, that.sql) && Objects.equals(this.binds, that.binds);
+    }
+
+    public int hashCode() {
+        return Objects.hashCode(sql) * 997 + Objects.hashCode(binds) * 991;
     }
 
     public String toString() {
