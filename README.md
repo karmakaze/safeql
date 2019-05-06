@@ -90,20 +90,23 @@ Done
 [👍] named the project
 
 Core complete (needs test coverage)
-[✔️] async functional composition
-[✔️] no generated N+1 queries
-[✔️️] handle IN (:values) with empty values condition
-[✔️️] handle literal predicate reductions
+[✔] async functional composition
+[✔] no generated N+1 queries
+[✔] handle IN (:values) with empty values condition
+[✔] handle literal predicate reductions
+[✔] base expressions
+[✔] SQL schema
+[✔] mix typed-expression and raw SQL
 
 Working design (explore edge cases)
-[⚙️] batch querying of entities and relationships
-[⚙️] mix expression and SQL
-[⚙️] type-safe expression composition
-[⚙️] type-safe statement composition
-[⚙️] composable templates and smart binding
+[⚙] SQL predicates
+[⚙] SQL expressions
+[⚙] SQL statements
+[⚙] composable expressions/queries and smart binding
+[⚙] batch querying of entities and relationships
 
 In-progress
-[⚠️️] SQL injection protection
+[⚠] SQL injection protection
 
 Not started
 [ ] rich CTE's, etc
