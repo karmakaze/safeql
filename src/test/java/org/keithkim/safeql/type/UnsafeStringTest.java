@@ -1,13 +1,16 @@
 package org.keithkim.safeql.type;
 
+import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
+import org.keithkim.demo.quicklog.Project;
+import org.keithkim.safeql.query.RawSelect;
 import org.keithkim.safeql.type.UnsafeString;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UnsafeStringTest {
     @Test
-    public void toStringDoesNotReturnTheString() {
+    void toStringDoesNotReturnTheString() {
         UnsafeString unsafe = new UnsafeString("Robert'); DROP TABLE Students; --");
 
         String escapedClassName = unsafe.getClass().getCanonicalName()
@@ -17,7 +20,7 @@ public class UnsafeStringTest {
     }
 
     @Test
-    public void hashCodeIsStable() {
+    void hashCodeIsStable() {
         UnsafeString unsafe1 = new UnsafeString("A");
         UnsafeString unsafe2 = new UnsafeString(new StringBuilder().append("A").toString());
 
@@ -26,7 +29,7 @@ public class UnsafeStringTest {
     }
 
     @Test
-    public void hashCodeNotSameAsForString() {
+    void hashCodeNotSameAsForString() {
         String string = "This is an arbitrary string.";
         UnsafeString unsafe = new UnsafeString(string);
 
@@ -34,7 +37,7 @@ public class UnsafeStringTest {
     }
 
     @Test
-    public void equalsStringIsFalse() {
+    void equalsStringIsFalse() {
         String string = "A";
         UnsafeString unsafe = new UnsafeString(string);
 
@@ -42,7 +45,7 @@ public class UnsafeStringTest {
     }
 
     @Test
-    public void equalsOtherEquivalentUnsafeStringIsTrue() {
+    void equalsOtherEquivalentUnsafeStringIsTrue() {
         UnsafeString unsafe1 = new UnsafeString("A");
         UnsafeString unsafe2 = new UnsafeString(new StringBuilder().append("A").toString());
 
@@ -51,10 +54,22 @@ public class UnsafeStringTest {
     }
 
     @Test
-    public void boxThenUnboxEqualsOriginal() {
+    void boxThenUnboxEqualsOriginal() {
         UnsafeString unsafe = new UnsafeString("Robert'); DROP TABLE Students; --");
         String unwrapped = unsafe.inject();
 
         assertEquals("Robert'); DROP TABLE Students; --", unwrapped);
+    }
+
+    @Test
+    void bindingUnsafe_sql_usesunboxedValueAsBoundParameter() {
+        UnsafeString unsafe = new UnsafeString("Robert'); DROP TABLE Students; --");
+        RawSelect<Project> rawSelect = new RawSelect<>(Project.class,
+                "SELECT id, name FROM project WHERE name = :name");
+
+        rawSelect.bind("name", unsafe);
+        assertEquals("SELECT id, name FROM project WHERE name = :name", rawSelect.sql());
+        assertEquals(ImmutableMap.of("name", unsafe.inject()), rawSelect.binds());
+        assertEquals("<SQL: SELECT id, name FROM project WHERE name = :name; BIND: name:Robert'); DROP TABLE Students; -->", rawSelect.toString());
     }
 }

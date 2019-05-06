@@ -2,6 +2,7 @@ package org.keithkim.safeql.expression;
 
 import com.google.common.base.Joiner;
 import lombok.EqualsAndHashCode;
+import org.keithkim.safeql.type.UnsafeString;
 
 import java.util.Map;
 import java.util.Objects;
@@ -45,7 +46,11 @@ public class Expr<T> {
     }
 
     public void bind(String name, Object value) {
-        binds.put(name, value);
+        if (value instanceof UnsafeString) {
+            binds.put(name, ((UnsafeString) value).inject());
+        } else {
+            binds.put(name, value);
+        }
     }
 
     public Map<String, ?> binds() {

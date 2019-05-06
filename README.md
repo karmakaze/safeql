@@ -85,7 +85,6 @@ The queries can also be independently tested with known data fixtures.
 
 ## Development Status
 
-```
 Done
 [👍] named the project
 
@@ -97,21 +96,20 @@ Core complete (needs test coverage)
 [✔] base expressions
 [✔] SQL schema
 [✔] mix typed-expression and raw SQL
+[✔] SQL injection protection
 
 Working design (explore edge cases)
 [⚙] SQL predicates
 [⚙] SQL expressions
 [⚙] SQL statements
-[⚙] composable expressions/queries and smart binding
-[⚙] batch querying of entities and relationships
 
 In-progress
-[⚠] SQL injection protection
+[⚠] composable expressions/queries and smart binding
+[⚠] batch querying of entities and relationships
 
 Not started
 [ ] rich CTE's, etc
 [ ] code generator
-```
 
 ## How to contribute
 
