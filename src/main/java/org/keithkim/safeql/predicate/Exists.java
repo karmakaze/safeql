@@ -1,23 +1,19 @@
 package org.keithkim.safeql.predicate;
 
 import lombok.EqualsAndHashCode;
+import org.keithkim.safeql.expression.Expr;
+import org.keithkim.safeql.type.Rows;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public class Exists extends Predicate {
-    private final Predicate predicate;
+    private final Expr<? extends Rows> subQuery;
 
-    public Exists(Predicate predicate) {
-        super("NOT");
-        this.predicate = predicate;
+    public Exists(Expr<? extends Rows> subQuery) {
+        super("EXISTS");
+        this.subQuery = subQuery;
     }
 
     public String sql() {
-        if (predicate.isKnownFalse()) {
-            return Predicates.TRUE.sql();
-        }
-        if (predicate.isKnownTrue()) {
-            return Predicates.FALSE.sql();
-        }
-        return "NOT " + group(predicate.sql());
+        return "EXISTS " + grouped(subQuery.sql());
     }
 }

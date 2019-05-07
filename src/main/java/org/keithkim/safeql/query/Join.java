@@ -13,7 +13,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.keithkim.safeql.predicate.Predicates.ALL;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class Join<L extends Entity, R extends Entity> extends Expr<JoinRows<L, R>> {
     public enum Type {
         JOIN("JOIN"),

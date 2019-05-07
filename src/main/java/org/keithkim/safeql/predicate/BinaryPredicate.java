@@ -1,16 +1,16 @@
 package org.keithkim.safeql.predicate;
 
-import lombok.EqualsAndHashCode;
 import org.keithkim.safeql.expression.BinaryExpr;
 import org.keithkim.safeql.expression.Expr;
 
-@EqualsAndHashCode
-public class BinaryPredicate<T> extends Predicate {
+import java.util.Objects;
+
+public abstract class BinaryPredicate<T> extends Predicate {
     private final BinaryExpr<T> binaryExpr;
 
     public BinaryPredicate(Expr<T> left, String operator, Expr<T> right) {
         super(null);
-        this.binaryExpr = new BinaryExpr<>(left, operator, right);
+        this.binaryExpr = new BinaryExpr<T>(left, operator, right) {};
     }
 
     protected Expr<T> left() {
@@ -23,5 +23,13 @@ public class BinaryPredicate<T> extends Predicate {
 
     public String sql() {
         return binaryExpr.sql();
+    }
+
+    public boolean equals(Object other) {
+        return Objects.equals(binaryExpr, other);
+    }
+
+    public int hashCode() {
+        return Objects.hashCode(binaryExpr);
     }
 }

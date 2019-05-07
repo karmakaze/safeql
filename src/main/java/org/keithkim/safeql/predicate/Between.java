@@ -4,13 +4,13 @@ import lombok.EqualsAndHashCode;
 import org.keithkim.safeql.expression.Expr;
 import org.keithkim.safeql.expression.TernaryExpr;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class Between<T> extends Predicate {
     private final TernaryExpr<T> ternaryExpr;
 
     public Between(Expr<T> subject, Expr<T> rangeMin, Expr<T> rangeMax) {
         super(null);
-        this.ternaryExpr = new TernaryExpr<>(subject, "BETWEEN", rangeMin, "AND", rangeMax);
+        this.ternaryExpr = new TernaryExpr<T>(subject, "BETWEEN", rangeMin, "AND", rangeMax) {};
     }
 
     @Override

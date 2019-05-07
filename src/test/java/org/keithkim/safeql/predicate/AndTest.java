@@ -32,12 +32,12 @@ public class AndTest {
 
     @Test
     public void testAndTrueFalseExpr_isFalse() {
-        Predicate or = AND(Predicates.OR(TRUE, TRUE), Predicates.OR(FALSE, FALSE));
+        Predicate or = AND(OR(TRUE, TRUE), OR(FALSE, FALSE));
         assertEquals("FALSE", or.sql());
     }
     @Test
     public void testAndTrueTrueExpr_isFalse() {
-        Predicate or = AND(Predicates.OR(TRUE, TRUE), Predicates.OR(TRUE, TRUE));
+        Predicate or = AND(OR(TRUE, TRUE), OR(TRUE, TRUE));
         assertEquals("TRUE", or.sql());
     }
 }

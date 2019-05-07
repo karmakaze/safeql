@@ -13,7 +13,7 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class Select<E extends Entity> extends Expr<Rows<E>> {
     private final Table table;
     private final List<Table<E>.SqlColumn<?>> columns;

@@ -7,8 +7,10 @@ import java.util.Collection;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static org.keithkim.safeql.predicate.Predicates.FALSE;
+import static org.keithkim.safeql.predicate.Predicates.TRUE;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public class All extends Predicate {
     private final Collection<? extends Predicate> predicates;
 
@@ -26,14 +28,14 @@ public class All extends Predicate {
         boolean isKnownTrue = true;
         for (Predicate predicate : predicates) {
             if (predicate.isKnownFalse()) {
-                return Predicates.FALSE.sql();
+                return FALSE.sql();
             }
             if (!predicate.isKnownTrue()) {
                 isKnownTrue = false;
             }
         }
         if (isKnownTrue) {
-            return Predicates.TRUE.sql();
+            return TRUE.sql();
         }
         return Joiner.on(" AND ").join(predicates.stream().map(e -> group(e)).collect(toList()));
     }

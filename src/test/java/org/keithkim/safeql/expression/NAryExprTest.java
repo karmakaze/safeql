@@ -1,10 +1,11 @@
 package org.keithkim.safeql.expression;
 
 import org.junit.jupiter.api.Test;
-import org.keithkim.safeql.predicate.Predicates;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.keithkim.safeql.expression.Expr.expr;
+import static org.keithkim.safeql.predicate.Predicates.FALSE;
+import static org.keithkim.safeql.predicate.Predicates.TRUE;
 
 public class NAryExprTest {
     @Test
@@ -15,7 +16,7 @@ public class NAryExprTest {
 
     @Test
     public void resolveEmptyFunctionReturnsIdentity() {
-        NAryExpr<Boolean> orOfNone = new NAryExpr<>("OR()", Predicates.FALSE);
+        NAryExpr<Boolean> orOfNone = new NAryExpr<>("OR()", FALSE);
         assertEquals("FALSE", orOfNone.sql());
     }
 
@@ -27,7 +28,7 @@ public class NAryExprTest {
 
     @Test
     public void resolveSingleFunctionReturnsSelf() {
-        NAryExpr<Boolean> andOfSingle = new NAryExpr<>("AND()", Predicates.TRUE, expr("v"));
+        NAryExpr<Boolean> andOfSingle = new NAryExpr<>("AND()", TRUE, expr("v"));
         assertEquals("v", andOfSingle.sql());
     }
 

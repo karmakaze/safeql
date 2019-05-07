@@ -8,13 +8,13 @@ import static org.keithkim.safeql.predicate.Predicates.*;
 public class NotTest {
     @Test
     public void testNotFalseLiteral_returnsTrue() {
-        Predicate notFalse = new Not(new Predicate("FALSE"));
+        Predicate notFalse = new Not(new Predicate("FALSE") {});
         assertEquals("TRUE", notFalse.sql());
     }
 
     @Test
     public void testNotTrueLiteral_returnsFalse() {
-        Predicate notTrue = new Not(new Predicate("true"));
+        Predicate notTrue = new Not(new Predicate("true") {});
         assertEquals("FALSE", notTrue.sql());
     }
 

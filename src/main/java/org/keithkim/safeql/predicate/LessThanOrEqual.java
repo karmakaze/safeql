@@ -3,7 +3,7 @@ package org.keithkim.safeql.predicate;
 import lombok.EqualsAndHashCode;
 import org.keithkim.safeql.expression.Expr;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public class LessThanOrEqual<T> extends BinaryPredicate<T> {
     public LessThanOrEqual(Expr<T> left, Expr<T> right) {
         super(left, "<=", right);

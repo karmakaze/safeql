@@ -7,7 +7,7 @@ import org.keithkim.safeql.type.Rows;
 
 import java.util.regex.Pattern;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public class RawSelect<E extends Entity> extends Expr<Rows<E>> {
     private static final Pattern varPattern = Pattern.compile(":[A-Za-z][A-Za-z0-9_]*");
     private final Class<E> entityClass;

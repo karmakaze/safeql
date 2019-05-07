@@ -3,7 +3,7 @@ package org.keithkim.safeql.predicate;
 import lombok.EqualsAndHashCode;
 import org.keithkim.safeql.expression.Expr;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public class Like extends BinaryPredicate<String> {
     private final Expr<String> subject;
     private final Expr<String> pattern;

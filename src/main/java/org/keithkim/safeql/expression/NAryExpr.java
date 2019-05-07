@@ -8,7 +8,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public class NAryExpr<T> extends Expr<T> {
     private final Expr<T> identity;
     private final Expr<T>[] exprs;

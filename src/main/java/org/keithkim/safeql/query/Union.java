@@ -9,7 +9,7 @@ import java.util.Arrays;
 
 import static java.util.stream.Collectors.toList;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public class Union<T> extends Expr<T> {
     private final Type type;
     private final Table[] tables;

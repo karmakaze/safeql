@@ -9,7 +9,7 @@ import java.util.*;
 
 import static java.util.Collections.singletonList;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public class Table<E extends Entity> extends Expr<E> {
     public final Class<E> entityClass;
     private final String alias;

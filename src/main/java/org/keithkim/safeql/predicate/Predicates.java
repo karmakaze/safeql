@@ -5,8 +5,8 @@ import org.keithkim.safeql.expression.Expr;
 import java.util.Collection;
 
 public class Predicates {
-    public static final Predicate FALSE = new Predicate("FALSE");
-    public static final Predicate TRUE = new Predicate("TRUE");
+    public static final Predicate FALSE = new Predicate("FALSE") {};
+    public static final Predicate TRUE = new Predicate("TRUE") {};
 
     public static Predicate NOT(Predicate predicate) {
         return new Not(predicate);

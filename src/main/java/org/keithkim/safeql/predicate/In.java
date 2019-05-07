@@ -5,7 +5,9 @@ import org.keithkim.safeql.expression.Expr;
 
 import java.util.Set;
 
-@EqualsAndHashCode
+import static org.keithkim.safeql.predicate.Predicates.FALSE;
+
+@EqualsAndHashCode(callSuper = true)
 public class In<T> extends BinaryPredicate<T> {
     private final Expr<T> subject;
     private final Expr<Set> range;
@@ -26,7 +28,7 @@ public class In<T> extends BinaryPredicate<T> {
         if (range instanceof org.keithkim.safeql.type.Set) {
             org.keithkim.safeql.type.Set sqlSet = (org.keithkim.safeql.type.Set) range;
             if (sqlSet.isKnownEmpty()) {
-                return Predicates.FALSE.sql();
+                return FALSE.sql();
             }
         }
         return subject.sql() +" IN "+ grouped(range.sql());
