@@ -31,7 +31,7 @@ public class JoinTest {
     @Test
     void leftJoinEquate2() {
         Join joinQuery = new Join(Join.Type.LEFT_JOIN, accountTable, projectTable, new Join.Equate(accountTable.idCol, projectTable.accountIdCol), new Join.Equate(accountTable.idCol, projectTable.accountIdCol));
-        assertEquals("account a LEFT JOIN project p ON a.id = p.account_id AND a.id = p.account_id", joinQuery.sql());
+        assertEquals("account a LEFT JOIN project p ON (a.id = p.account_id) AND (a.id = p.account_id)", joinQuery.sql());
     }
 
     @Test

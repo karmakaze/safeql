@@ -8,6 +8,7 @@ import org.keithkim.safeql.type.UnsafeString;
 
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,7 +18,12 @@ public class Expr<T> {
     private static final Pattern TERM_PATTERN = Pattern.compile("[':.A-Za-z0-9_]+");
     private static final Pattern ONE_GROUP_PATTERN = Pattern.compile("[(][^()]+[)]");
 
-    final String sql;
+    static final AtomicInteger OBJECT_ID_GENERATOR = new AtomicInteger();
+
+    @EqualsAndHashCode.Exclude
+    private final int objectId;
+
+    volatile String sql;
     final Map<String, Object> binds = new TreeMap<>();
 
     public static <T> Expr<T> expr(String string) {
@@ -47,6 +53,7 @@ public class Expr<T> {
 
     public Expr(String sql) {
         this.sql = sql;
+        this.objectId = OBJECT_ID_GENERATOR.incrementAndGet();
     }
 
     public String sql() {
@@ -58,6 +65,18 @@ public class Expr<T> {
             binds.put(name, ((UnsafeString) value).inject());
         } else {
             binds.put(name, value);
+        }
+    }
+
+    public void bindLocal(String name, Object value) {
+        String bindName = name +"_"+ objectId;
+        if (!binds.containsKey(bindName)) {
+            sql = sql.replaceAll(":"+ name +"\\b", ":"+ name +"_"+ objectId);
+        }
+        if (value instanceof UnsafeString) {
+            binds.put(bindName, ((UnsafeString) value).inject());
+        } else {
+            binds.put(bindName, value);
         }
     }
 
