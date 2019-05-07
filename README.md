@@ -83,20 +83,21 @@ Map<Project, Admin> notify = Async.combine(asyncProjects, asyncActiveAdmins,
 The pure functional elements can be extracted into testable classes and methods separately from the IO performed between them.
 The queries can also be independently tested with known data fixtures.
 
-## Development Status
-
+## Development status
+```
 Done
 [👍] named the project
+[👍] no generated N+1 queries
+[👍] SQL injection protection
 
 Core complete (needs test coverage)
-[✔] async functional composition
-[✔] no generated N+1 queries
-[✔] handle IN (:values) with empty values condition
 [✔] handle literal predicate reductions
+[✔] handle IN (:values) with empty values condition
+[✔] async functional composition
 [✔] base expressions
 [✔] SQL schema
 [✔] mix typed-expression and raw SQL
-[✔] SQL injection protection
+[✔] batch querying of entities' relation
 
 Working design (explore edge cases)
 [⚙] SQL predicates
@@ -104,12 +105,15 @@ Working design (explore edge cases)
 [⚙] SQL statements
 
 In-progress
-[⚠] composable expressions/queries and smart binding
-[⚠] batch querying of entities and relationships
+[⚠] composable base expressions and smart binding
+[⚠] composable query expressions and smart binding
 
 Not started
+[ ] batch querying of entity and relation
+[ ] loading of multipe nested relationships
 [ ] rich CTE's, etc
 [ ] code generator
+```
 
 ## How to contribute
 
