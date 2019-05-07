@@ -3,9 +3,9 @@ package org.keithkim.safeql.expression;
 import com.google.common.base.Joiner;
 import lombok.EqualsAndHashCode;
 
+import java.util.Arrays;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 @EqualsAndHashCode
@@ -34,7 +34,7 @@ public class NAryExpr<T> extends Expr<T> {
         }
         String operator = super.sql();
 
-        List<String> terms = asList(exprs).stream().map(expr -> group(expr.sql())).collect(toList());
+        List<String> terms = Arrays.stream(exprs).map(expr -> group(expr.sql())).collect(toList());
 
         if (operator.endsWith("()")) {
             String arguments = Joiner.on(", ").join(terms);

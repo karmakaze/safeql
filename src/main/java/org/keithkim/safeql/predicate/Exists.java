@@ -3,10 +3,10 @@ package org.keithkim.safeql.predicate;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
-public class Not extends Predicate {
+public class Exists extends Predicate {
     private final Predicate predicate;
 
-    public Not(Predicate predicate) {
+    public Exists(Predicate predicate) {
         super("NOT");
         this.predicate = predicate;
     }

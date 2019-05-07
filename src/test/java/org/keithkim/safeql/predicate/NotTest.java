@@ -32,13 +32,13 @@ public class NotTest {
 
     @Test
     public void testNotFalseExpr_returnsTrue() {
-        Predicate notFalse = new Not(And(TRUE, FALSE));
+        Predicate notFalse = new Not(AND(TRUE, FALSE));
         assertEquals("TRUE", notFalse.sql());
     }
 
     @Test
     public void testNotTrueExpr_returnsFalse() {
-        Predicate notTrue = new Not(Or(TRUE, FALSE));
+        Predicate notTrue = new Not(OR(TRUE, FALSE));
         assertEquals("FALSE", notTrue.sql());
     }
 }

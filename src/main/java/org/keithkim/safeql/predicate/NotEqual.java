@@ -4,9 +4,9 @@ import lombok.EqualsAndHashCode;
 import org.keithkim.safeql.expression.Expr;
 
 @EqualsAndHashCode
-public class Equal<T> extends BinaryPredicate<T> {
-    public Equal(Expr<T> left, Expr<T> right) {
-        super(left, "=", right);
+public class NotEqual<T> extends BinaryPredicate<T> {
+    public NotEqual(Expr<T> left, Expr<T> right) {
+        super(left, "<>", right);
     }
 
     public String sql() {
@@ -15,7 +15,7 @@ public class Equal<T> extends BinaryPredicate<T> {
         if ("NULL".equalsIgnoreCase(leftSql) || "NULL".equalsIgnoreCase(rightSql)) {
             return "NULL";
         } else {
-            return group(leftSql) + " = " + group(rightSql);
+            return group(leftSql) + " <> " + group(rightSql);
         }
     }
 }

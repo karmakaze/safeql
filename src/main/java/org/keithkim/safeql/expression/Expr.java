@@ -2,10 +2,11 @@ package org.keithkim.safeql.expression;
 
 import com.google.common.base.Joiner;
 import lombok.EqualsAndHashCode;
+import org.keithkim.safeql.predicate.Equal;
+import org.keithkim.safeql.query.Join;
 import org.keithkim.safeql.type.UnsafeString;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,6 +29,13 @@ public class Expr<T> {
             return string;
         }
         return "(" + string + ")";
+    }
+
+    public static String group(Expr<?> expr) {
+        if (expr instanceof Equal || expr instanceof Join.Equate) {
+            return expr.sql();
+        }
+        return group(expr.sql());
     }
 
     public static String group(String string) {

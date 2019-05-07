@@ -1,8 +1,8 @@
 package org.keithkim.safeql.query;
 
-import com.google.common.base.Joiner;
 import lombok.EqualsAndHashCode;
 import org.keithkim.safeql.expression.Expr;
+import org.keithkim.safeql.predicate.Predicate;
 import org.keithkim.safeql.schema.Entity;
 import org.keithkim.safeql.schema.Table;
 import org.keithkim.safeql.type.JoinRows;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
+import static org.keithkim.safeql.predicate.Predicates.ALL;
 
 @EqualsAndHashCode
 public class Join<L extends Entity, R extends Entity> extends Expr<JoinRows<L, R>> {
@@ -94,7 +94,7 @@ public class Join<L extends Entity, R extends Entity> extends Expr<JoinRows<L, R
         if (type == Type.CROSS_JOIN) {
             return "";
         }
-        return " ON "+ Joiner.on(" AND ").join(equates.stream().map(e -> e.sql()).collect(toList()));
+        return " ON "+ ALL(equates).sql();
     }
 
     public Join<L, R> where(Cond2<L, R> cond) {
@@ -108,7 +108,7 @@ public class Join<L extends Entity, R extends Entity> extends Expr<JoinRows<L, R
     public static class Cond2<L, R> {
     }
 
-    public static class Equate<L extends Entity, R extends Entity, T> extends Expr<Boolean> {
+    public static class Equate<L extends Entity, R extends Entity, T> extends Predicate {
         public final Table<L>.SqlColumn<T> lCol;
         public final Table<R>.SqlColumn<T> rCol;
 
@@ -119,7 +119,7 @@ public class Join<L extends Entity, R extends Entity> extends Expr<JoinRows<L, R
         }
 
         public String sql() {
-            return group(lCol.sql()) +" = "+ group(rCol.sql());
+            return lCol.sql() +" = "+ rCol.sql();
         }
     }
 }

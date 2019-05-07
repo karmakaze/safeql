@@ -5,7 +5,8 @@ import lombok.EqualsAndHashCode;
 import org.keithkim.safeql.expression.Expr;
 import org.keithkim.safeql.schema.Table;
 
-import static java.util.Arrays.asList;
+import java.util.Arrays;
+
 import static java.util.stream.Collectors.toList;
 
 @EqualsAndHashCode
@@ -24,7 +25,7 @@ public class Union<T> extends Expr<T> {
     }
 
     public String sql() {
-        return Joiner.on(" " + type.toString() + " ").join(asList(tables).stream().map(Table::sql).collect(toList()));
+        return Joiner.on(" " + type.toString() + " ").join(Arrays.stream(tables).map(Table::sql).collect(toList()));
     }
 
 //    public void bind(String name, Object value) {
