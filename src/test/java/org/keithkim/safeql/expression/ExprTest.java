@@ -4,9 +4,11 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
 
 import java.util.SortedMap;
+import java.util.regex.Pattern;
 
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.keithkim.safeql.test.TestHelpers.assertMatches;
 
 class ExprTest {
     @Test
@@ -107,6 +109,18 @@ class ExprTest {
 
         assertTrue(subject.binds() instanceof SortedMap);
         assertEquals(ImmutableMap.of("min_id", 1000, "max_id", 2000, "limit", 10, "offset", 5), subject.binds());
+    }
+
+    @Test
+    void withLocalBinds_sql_shouldUseNumberedNames() {
+        Expr<String> subject = new Expr<>("SELECT * FROM account WHERE id BETWEEN :min_id AND :max_id LIMIT :limit OFFSET :offset");
+        subject.bindLocal("min_id", 1000);
+        subject.bindLocal("max_id", 2000);
+        subject.bindLocal("limit", 10);
+        subject.bindLocal("offset", 5);
+
+        Pattern pattern = Pattern.compile("SELECT \\* FROM account WHERE id BETWEEN :(min_id_[0-9]+) AND :(max_id_[0-9]+) LIMIT :(limit_[0-9]+) OFFSET :(offset_[0-9]+)");
+        assertMatches(pattern, subject.sql());
     }
 
     @Test
