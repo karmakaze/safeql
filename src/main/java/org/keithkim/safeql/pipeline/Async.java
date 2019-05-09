@@ -1,4 +1,4 @@
-package org.keithkim.safeql.util;
+package org.keithkim.safeql.pipeline;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -64,29 +64,29 @@ public class Async {
         return completable;
     }
 
-    public static <T, U> CompletionStage<U> chain(CompletionStage<T> a,
-                                                  Function<? super T, ? extends U> fn) {
+    public static <T, U> CompletionStage<U> pipeline(CompletionStage<T> a,
+                                                     Function<? super T, ? extends U> fn) {
         return a.thenApply(fn);
     }
 
-    public static <T, U, V> CompletionStage<V> chain(CompletionStage<T> a,
-                                                     Function<? super T, ? extends U> fn1,
-                                                     Function<? super U, ? extends V> fn2) {
+    public static <T, U, V> CompletionStage<V> pipeline(CompletionStage<T> a,
+                                                        Function<? super T, ? extends U> fn1,
+                                                        Function<? super U, ? extends V> fn2) {
         return a.thenApply(fn1).thenApply(fn2);
     }
 
-    public static <T, U, V, W> CompletionStage<W> chain(CompletionStage<T> a,
-                                                        Function<? super T, ? extends U> fn1,
-                                                        Function<? super U, ? extends V> fn2,
-                                                        Function<? super V, ? extends W> fn3) {
+    public static <T, U, V, W> CompletionStage<W> pipeline(CompletionStage<T> a,
+                                                           Function<? super T, ? extends U> fn1,
+                                                           Function<? super U, ? extends V> fn2,
+                                                           Function<? super V, ? extends W> fn3) {
         return a.thenApply(fn1).thenApply(fn2).thenApply(fn3);
     }
 
-    public static <T, U, V, W, X> CompletionStage<X> chain(CompletionStage<T> a,
-                                                           Function<? super T, ? extends U> fn1,
-                                                           Function<? super U, ? extends V> fn2,
-                                                           Function<? super V, ? extends W> fn3,
-                                                           Function<? super W, ? extends X> fn4) {
+    public static <T, U, V, W, X> CompletionStage<X> pipeline(CompletionStage<T> a,
+                                                              Function<? super T, ? extends U> fn1,
+                                                              Function<? super U, ? extends V> fn2,
+                                                              Function<? super V, ? extends W> fn3,
+                                                              Function<? super W, ? extends X> fn4) {
         return a.thenApply(fn1).thenApply(fn2).thenApply(fn3).thenApply(fn4);
     }
 

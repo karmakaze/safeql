@@ -87,7 +87,7 @@ public class DemoMain {
 //                sleep(100L);
 //            }
 //        });
-//        CompletionStage<Projects> asyncProjects = Completables.chain(asyncAccounts, (accounts) -> demoMain.demoAccountsLoadProjects(accounts));
+//        CompletionStage<Projects> asyncProjects = Async.pipeline(asyncAccounts, (accounts) -> demoMain.demoAccountsLoadProjects(accounts));
 //        asyncProjects.thenAccept(projects -> {
 //            for (Project project : projects) {
 //                System.out.println(project);

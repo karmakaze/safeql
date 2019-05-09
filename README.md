@@ -58,11 +58,11 @@ Let's say we want to load some Accounts with some of their Projects and all Proj
 ```
 CompletableFuture<Accounts> asyncAccounts = Accounts.where("id >= ?", 1000);
 
-CompletableFuture<Member> asyncProjectMembers = Async.chain(asyncAccounts,
+CompletableFuture<Member> asyncProjectMembers = Async.pipeline(asyncAccounts,
                               (accounts) -> accounts.loadProjects("updated_at >= ?", Instant.now().minusDays(30)),
                               (projects) -> projects.loadMembers());
 
-CompletableFuture<Admin> asyncActiveAdmins = Async.chain(asyncAccounts,
+CompletableFuture<Admin> asyncActiveAdmins = Async.pipeline(asyncAccounts,
                               (accounts) -> accounts.loadAdmins("active"));
 
 Async.join(asyncProjectMembers, asyncActiveAdmins); // we don't need to wait for projects since loadMembers already does that
