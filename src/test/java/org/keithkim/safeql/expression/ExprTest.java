@@ -3,7 +3,8 @@ package org.keithkim.safeql.expression;
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
 
-import java.util.SortedMap;
+import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.util.Collections.emptyMap;
@@ -114,13 +115,55 @@ class ExprTest {
     @Test
     void withLocalBinds_sql_shouldUseNumberedNames() {
         Expr<String> subject = new Expr<>("SELECT * FROM account WHERE id BETWEEN :min_id AND :max_id LIMIT :limit OFFSET :offset");
-        subject.bindLocal("min_id", 1000);
-        subject.bindLocal("max_id", 2000);
-        subject.bindLocal("limit", 10);
-        subject.bindLocal("offset", 5);
+        subject.localBind("min_id", 1000);
+        subject.localBind("max_id", 2000);
+        subject.localBind("limit", 10);
+        subject.localBind("offset", 5);
 
         Pattern pattern = Pattern.compile("SELECT \\* FROM account WHERE id BETWEEN :(min_id_[0-9]+) AND :(max_id_[0-9]+) LIMIT :(limit_[0-9]+) OFFSET :(offset_[0-9]+)");
         assertMatches(pattern, subject.sql());
+
+        Set<String> numberedNames = new HashSet<>();
+        Matcher matcher = pattern.matcher(subject.sql());
+        if (matcher.find()) {
+            for (int i = 1; i <= matcher.groupCount(); i++) {
+                numberedNames.add(matcher.group(i));
+            }
+        }
+        assertEquals(numberedNames, subject.localBinds().keySet());
+    }
+
+    @Test
+    void withBindsAndLocalBinds_bind_shouldNotChangeLocalBinds() {
+        Expr<String> subject = new Expr<>("SELECT * FROM account WHERE id BETWEEN :min_id AND :max_id LIMIT :limit OFFSET :offset");
+        subject.localBind("min_id", 1000);
+        subject.localBind("max_id", 2000);
+        subject.bind("min_id", 3000);
+        subject.bind("max_id", 4000);
+        subject.bind("limit", 10);
+        subject.bind("offset", 5);
+
+        assertEquals(ImmutableMap.of("limit", 10, "offset", 5), subject.binds());
+
+        Pattern pattern = Pattern.compile("SELECT \\* FROM account WHERE id BETWEEN :(min_id_[0-9]+) AND :(max_id_[0-9]+) LIMIT :limit OFFSET :offset");
+        assertMatches(pattern, subject.sql());
+
+        SortedSet<String> numberedNames = new TreeSet<>();
+        Matcher matcher = pattern.matcher(subject.sql());
+        if (matcher.find()) {
+            for (int i = 1; i <= matcher.groupCount(); i++) {
+                numberedNames.add(matcher.group(i));
+            }
+        }
+        assertEquals(numberedNames, subject.localBinds().keySet());
+
+        assertTrue(numberedNames.first().startsWith("max_id_"));
+        assertTrue(numberedNames.last().startsWith("min_id_"));
+        assertEquals(ImmutableMap.of(numberedNames.first(), 2000, numberedNames.last(), 1000), subject.localBinds());
+    }
+
+    @Test
+    void localBoundExpr_bindComposite_shouldNotChangeNestedLocalBinds() {
     }
 
     @Test
