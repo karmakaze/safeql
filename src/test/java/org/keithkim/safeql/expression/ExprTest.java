@@ -1,5 +1,6 @@
 package org.keithkim.safeql.expression;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
 
@@ -115,10 +116,10 @@ class ExprTest {
     @Test
     void withLocalBinds_sql_shouldUseNumberedNames() {
         Expr<String> subject = new Expr<>("SELECT * FROM account WHERE id BETWEEN :min_id AND :max_id LIMIT :limit OFFSET :offset");
-        subject.localBind("min_id", 1000);
-        subject.localBind("max_id", 2000);
-        subject.localBind("limit", 10);
-        subject.localBind("offset", 5);
+        subject.bindLocal("min_id", 1000);
+        subject.bindLocal("max_id", 2000);
+        subject.bindLocal("limit", 10);
+        subject.bindLocal("offset", 5);
 
         Pattern pattern = Pattern.compile("SELECT \\* FROM account WHERE id BETWEEN :(min_id_[0-9]+) AND :(max_id_[0-9]+) LIMIT :(limit_[0-9]+) OFFSET :(offset_[0-9]+)");
         assertMatches(pattern, subject.sql());
@@ -136,8 +137,8 @@ class ExprTest {
     @Test
     void withBindsAndLocalBinds_bind_shouldNotChangeLocalBinds() {
         Expr<String> subject = new Expr<>("SELECT * FROM account WHERE id BETWEEN :min_id AND :max_id LIMIT :limit OFFSET :offset");
-        subject.localBind("min_id", 1000);
-        subject.localBind("max_id", 2000);
+        subject.bindLocal("min_id", 1000);
+        subject.bindLocal("max_id", 2000);
         subject.bind("min_id", 3000);
         subject.bind("max_id", 4000);
         subject.bind("limit", 10);
@@ -163,7 +164,25 @@ class ExprTest {
     }
 
     @Test
-    void localBoundExpr_bindComposite_shouldNotChangeNestedLocalBinds() {
+    void bindLocalPositional_shouldSetNamedParam() {
+        Expr<String> subject = Expr.expr("SELECT * FROM account WHERE id = ?", 1000);
+        String varName = "_1_" + subject.objectId;
+
+        assertEquals("<SQL: SELECT * FROM account WHERE id = :"+varName+"; BIND: "+varName+":1000>", subject.toString());
+    }
+
+    @Test
+    void bindLocalPositionals_shouldSetNamedParams() {
+        Expr<String> subject = Expr.expr("SELECT * FROM point WHERE (x, y) IN ((?, ?), (?, ?))",
+                1, 2, 3, 4);
+        Map<String, Object> binds = new LinkedHashMap<>(4);
+        for (int i = 1; i <= 4; i++) {
+            binds.put("_"+ i +"_" + subject.objectId, i);
+        }
+
+        String sql = String.format("SELECT * FROM point WHERE (x, y) IN ((:%s, :%s), (:%s, :%s))", binds.keySet().toArray());
+        String bind = Joiner.on(", ").withKeyValueSeparator(":").join(binds);
+        assertEquals("<SQL: "+ sql +"; BIND: "+bind+">", subject.toString());
     }
 
     @Test
