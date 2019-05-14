@@ -130,6 +130,16 @@ public class Expr<T> {
         if (StringHelpers.isEmpty(sql)) {
             return;
         }
+        if (value instanceof Expr) {
+            Expr<?> expr = (Expr) value;
+            if ("?".equals(name)) {
+                sql = sql.replaceFirst("\\?", expr.sql());
+            } else {
+                sql = sql.replaceAll(":"+ name +"\\b", expr.sql());
+            }
+            return;
+        }
+
         final String bindName;
         if ("?".equals(name)) {
             bindName = "_" + ++varId + "_" + objectId;

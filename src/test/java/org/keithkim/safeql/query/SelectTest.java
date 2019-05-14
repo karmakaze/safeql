@@ -1,8 +1,16 @@
 package org.keithkim.safeql.query;
 
 import org.junit.jupiter.api.Test;
+import org.keithkim.demo.quicklog.Account;
 import org.keithkim.demo.quicklog.Project;
 import org.keithkim.safeql.query.Select;
+import org.keithkim.safeql.schema.Entity;
+import org.keithkim.safeql.schema.Table;
+
+import java.beans.ConstructorProperties;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,14 +26,27 @@ public class SelectTest {
 
     @Test
     void nestedTest() {
-//        SqlRawSelect<User> subQuery = new SqlRawSelect<>("SELECT * FROM user");
+        Table<Abc> subQuery1 = new Table<>(Abc.class, "SELECT 1 a, 2 b, 3 c UNION ALL SELECT 4, 5, 6", "t1");
 
-//        SqlRawSelect<SqlRows> subQuery1 = new SqlRawSelect<>("SELECT 1 a, 2 b, 3 c UNION ALL SELECT 4, 5, 6");
-//        SelectTableQuery selectTableQuery1 = new SelectTableQuery(new SqlAliasExpr(subQuery1, "t1"));
-//        SqlAliasExpr subQuery2 = new SqlAliasExpr(selectTableQuery1, "t2");
-//        SelectTableQuery selectTableQuery2 = selectTableQuery1 = new SelectTableQuery(subQuery2);
-//
-//        assertEquals("SELECT * FROM (SELECT * FROM (SELECT 1 a, 2 b, 3 c UNION ALL SELECT 4, 5, 6) t1) t2",
-//                selectTableQuery2.sql());
+        Table<Account> subQuery2 = new Table<>(Account.class, "SELECT * FROM ?", "t2");
+        subQuery2.bindLocal("?", subQuery1);
+
+        Select<Account> selectFromT2 = new Select(subQuery2);
+
+        assertEquals("SELECT t2.* FROM (SELECT * FROM (SELECT 1 a, 2 b, 3 c UNION ALL SELECT 4, 5, 6) t1) t2",
+                selectFromT2.sql());
+    }
+
+    public static class Abc extends Entity<Long> {
+        public Long a;
+        public Long b;
+        public Long c;
+
+        @ConstructorProperties({"a", "b", "c"})
+        public Abc(long a, long b, long c) {
+            this.a = a;
+            this.b = b;
+            this.c = c;
+        }
     }
 }

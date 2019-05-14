@@ -97,21 +97,25 @@ Core complete (needs test coverage)
 [✔] base expressions
 [✔] SQL schema
 [✔] mix typed-expression and raw SQL
-[✔] batch querying of entities' relation
+[✔] batch querying of entities' relations and sub-relations
+[✔] SQL predicates
+[✔] SQL expressions
+[✔] composable base expressions and smart binding
+[✔] rich SQL statement features (WITH CTE)
+[✔] handle bind of :placeholder with Expr<?>
 
 Working design (explore edge cases)
-[⚙] SQL predicates
-[⚙] SQL expressions
 [⚙] SQL statements
 
 In-progress
-[⚠] composable base expressions and smart binding
+[⚠] local bind parameters on constructors
 [⚠] composable query expressions and smart binding
 
 Not started
-[ ] batch querying of entity and relation
-[ ] loading of multipe nested relationships
-[ ] rich CTE's, etc
+[ ] string literals with embedded spaces in terms
+[ ] statement transformation SELECT columns -> COUNT(a.*), COUNT(DISTINCT), EXISTS
+[ ] aggregate functions (GROUP BY, HAVING)
+[ ] rich SQL statement features (DISTINCT, DISTINCT ON, WINDOW, etc)
 [ ] code generator
 ```
 

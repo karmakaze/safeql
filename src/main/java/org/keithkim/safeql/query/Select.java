@@ -11,12 +11,18 @@ import org.keithkim.safeql.type.Rows;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
 @EqualsAndHashCode(callSuper = false)
 public class Select<E extends Entity> extends Expr<Rows<E>> {
     private final Table table;
     private final List<Table<E>.SqlColumn<?>> columns;
+
+    public Select(Table<E> table, Table<E>.SqlColumn<?>... columns) {
+        this(table, asList(columns));
+    }
 
     public Select(Table<E> table, List<Table<E>.SqlColumn<?>> columns) {
         super(null);
@@ -33,7 +39,13 @@ public class Select<E extends Entity> extends Expr<Rows<E>> {
 
     public String sql() {
         Map<String, ?> binds = binds();
-        List<String> cols = columns.stream().map(c -> c.selectTerm(binds)).collect(toList());
+        List<String> cols;
+        if (columns.isEmpty()) {
+            String aliasStar = table.alias().isPresent() ? table.alias().get() + ".*" : "*";
+            cols = singletonList(aliasStar);
+        } else {
+            cols = columns.stream().map(c -> c.selectTerm(binds)).collect(toList());
+        }
         String fromTable = "";
         if (table != Sys.Table.none) {
             fromTable = " FROM "+ table.sql();

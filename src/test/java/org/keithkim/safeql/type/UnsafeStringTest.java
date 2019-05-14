@@ -3,8 +3,7 @@ package org.keithkim.safeql.type;
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
 import org.keithkim.demo.quicklog.Project;
-import org.keithkim.safeql.query.RawSelect;
-import org.keithkim.safeql.type.UnsafeString;
+import org.keithkim.safeql.schema.Table;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -64,7 +63,7 @@ public class UnsafeStringTest {
     @Test
     void bindingUnsafe_sql_usesunboxedValueAsBoundParameter() {
         UnsafeString unsafe = new UnsafeString("Robert'); DROP TABLE Students; --");
-        RawSelect<Project> rawSelect = new RawSelect<>(Project.class,
+        Table<Project> rawSelect = new Table<>(Project.class,
                 "SELECT id, name FROM project WHERE name = :name");
 
         rawSelect.bind("name", unsafe);

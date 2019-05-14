@@ -35,6 +35,10 @@ public class Table<E extends Entity> extends Expr<E> {
         return super.sql();
     }
 
+    public String sqlNoAlias() {
+        return super.sql();
+    }
+
     public String aliasOrTable() {
         return alias().orElse(super.sql());
     }
