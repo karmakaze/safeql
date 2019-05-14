@@ -15,6 +15,7 @@ public class Database {
     public Database(String jdbcUrl, String username, String password) {
         this(jdbcUrl, username, password, null);
     }
+
     public Database(String jdbcUrl, String username, String password, String driverClassName) {
         ds = new HikariDataSource();
         ds.setJdbcUrl(jdbcUrl);
