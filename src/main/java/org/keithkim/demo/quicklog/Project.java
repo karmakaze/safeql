@@ -3,6 +3,8 @@ package org.keithkim.demo.quicklog;
 import org.keithkim.safeql.schema.Entity;
 
 import java.beans.ConstructorProperties;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Project extends Entity<Long> {
     public static class Table extends org.keithkim.safeql.schema.Table<Project> {
@@ -63,6 +65,22 @@ public class Project extends Entity<Long> {
         this.domain = domain;
     }
 
+    @Override
+    public Project withId(Long id) {
+        return new Project(id, accountId, name, domain);
+    }
+
+    @Override
+    public Map<String, ?> attributes() {
+        LinkedHashMap<String, Object> attributes = new LinkedHashMap<>(4);
+        attributes.put("id", id);
+        attributes.put("account_id", accountId);
+        attributes.put("name", name);
+        attributes.put("domain", domain);
+        return attributes;
+    }
+
+    @Override
     public String toString() {
         return String.format("Project<id:%d, accountId:%d, name:%s, domain:%s>", id, accountId, name, domain);
     }

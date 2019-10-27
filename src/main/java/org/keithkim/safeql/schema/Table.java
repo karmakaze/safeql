@@ -13,6 +13,7 @@ import static java.util.Collections.singletonList;
 public class Table<E extends Entity> extends Expr<E> {
     public final Class<E> entityClass;
     private final String alias;
+    private final LinkedHashMap<String, SqlColumn<?>> sqlColumns = new LinkedHashMap<>();
 
     public Table(Class<E> entityClass) {
         this(entityClass, entityClass.getSimpleName().toLowerCase());
@@ -47,8 +48,22 @@ public class Table<E extends Entity> extends Expr<E> {
         return Optional.ofNullable(alias);
     }
 
+    public List<String> sqlColumnNames() {
+        return new ArrayList<>(sqlColumns.keySet());
+    }
+
+    public List<SqlColumn> sqlColumns() {
+        Collection<SqlColumn<?>> sqlColumns = this.sqlColumns.values();
+        if (sqlColumns instanceof List) {
+            return (List) sqlColumns;
+        }
+        return new ArrayList<>(sqlColumns);
+    }
+
     public <T> SqlColumn<T> sqlColumn(String columnName) {
-        return new SqlColumn<>(columnName);
+        SqlColumn<T> sqlColumn = new SqlColumn<>(columnName);
+        sqlColumns.put(columnName, sqlColumn);
+        return sqlColumn;
     }
 
     public List<E> all() {

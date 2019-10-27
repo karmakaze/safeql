@@ -5,6 +5,7 @@ import org.keithkim.safeql.schema.Entity;
 import java.beans.ConstructorProperties;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Account extends Entity<Long> {
@@ -53,10 +54,27 @@ public class Account extends Entity<Long> {
         this.expires = expires;
     }
 
+    @Override
+    public Account withId(Long id) {
+        return new Account(id, fullName, email, planName, expires);
+    }
+
     void addProject(Project project) {
         this.projects.put(project.id, project);
     }
 
+    @Override
+    public Map<String, ?> attributes() {
+        LinkedHashMap<String, Object> attributes = new LinkedHashMap<>(5);
+        attributes.put("id", id);
+        attributes.put("full_name", fullName);
+        attributes.put("email", email);
+        attributes.put("plan_name", planName);
+        attributes.put("expires", expires);
+        return attributes;
+    }
+
+    @Override
     public String toString() {
         return String.format("Account<id:%d, fullName:%s, email:%s, planName:%s, expires:%s, projects: %s>",
                 id, fullName, email, planName, expires, projects.values());

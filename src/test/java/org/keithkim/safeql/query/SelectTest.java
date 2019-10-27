@@ -3,13 +3,11 @@ package org.keithkim.safeql.query;
 import org.junit.jupiter.api.Test;
 import org.keithkim.demo.quicklog.Account;
 import org.keithkim.demo.quicklog.Project;
-import org.keithkim.safeql.query.Select;
 import org.keithkim.safeql.schema.Entity;
 import org.keithkim.safeql.schema.Table;
 
 import java.beans.ConstructorProperties;
-import java.time.Instant;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
@@ -47,6 +45,20 @@ public class SelectTest {
             this.a = a;
             this.b = b;
             this.c = c;
+        }
+
+        @Override
+        public Abc withId(Long a) {
+            return new Abc(a, b, c);
+        }
+
+        @Override
+        public Map<String, ?> attributes() {
+            LinkedHashMap<String, Object> attributes = new LinkedHashMap<>(3);
+            attributes.put("a", a);
+            attributes.put("b", b);
+            attributes.put("c", c);
+            return attributes;
         }
     }
 }

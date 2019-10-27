@@ -11,7 +11,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static org.keithkim.safeql.predicate.Predicates.ALL;
 
 @EqualsAndHashCode(callSuper = false)
 public class With<E extends Entity> extends Expr<Rows<E>> {
