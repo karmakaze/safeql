@@ -6,6 +6,8 @@ import java.util.Map;
 
 @EqualsAndHashCode
 public abstract class Entity<PkType> {
+    public abstract String getPkName();
+    public abstract PkType getPk();
     public abstract Entity<PkType> withId(PkType id);
     public abstract Map<String, ?> attributes();
 }

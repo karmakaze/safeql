@@ -48,6 +48,16 @@ public class SelectTest {
         }
 
         @Override
+        public String getPkName() {
+            return "a";
+        }
+
+        @Override
+        public Long getPk() {
+            return a;
+        }
+
+        @Override
         public Abc withId(Long a) {
             return new Abc(a, b, c);
         }

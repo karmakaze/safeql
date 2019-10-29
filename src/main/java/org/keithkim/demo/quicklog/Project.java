@@ -66,6 +66,16 @@ public class Project extends Entity<Long> {
     }
 
     @Override
+    public String getPkName() {
+        return "id";
+    }
+
+    @Override
+    public Long getPk() {
+        return id;
+    }
+
+    @Override
     public Project withId(Long id) {
         return new Project(id, accountId, name, domain);
     }
