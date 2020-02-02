@@ -2,10 +2,7 @@ package org.keithkim.demo;
 
 import org.jdbi.v3.core.mapper.JoinRow;
 import org.jdbi.v3.core.mapper.JoinRowMapper;
-import org.keithkim.demo.quicklog.Account;
-import org.keithkim.demo.quicklog.Accounts;
-import org.keithkim.demo.quicklog.Project;
-import org.keithkim.demo.quicklog.Projects;
+import org.keithkim.demo.quicklog.*;
 import org.keithkim.safeql.query.Join;
 import org.keithkim.safeql.statement.Database;
 import org.keithkim.safeql.statement.Registry;
@@ -71,11 +68,13 @@ public class DemoMain {
     }
 
     public static void main(String[] args) {
-        String jdbcUrl = System.getenv("JDBC_URL");
-        String dbUser = System.getenv("DB_USER");
-        String dbPassword = System.getenv("DB_PASSWORD");
-        Database db = new Database(jdbcUrl, dbUser, dbPassword);
-        Registry.registerDefault(db);
+        // for setting db
+        DataSourceEnvironment.setup();
+//        String jdbcUrl = System.getenv("JDBC_URL");
+//        String dbUser = System.getenv("DB_USER");
+//        String dbPassword = System.getenv("DB_PASSWORD");
+//        Database db = new Database(jdbcUrl, dbUser, dbPassword);
+//        Registry.registerDefault(db);
 
         DemoMain demoMain = new DemoMain();
         demoMain.demoCompose();
