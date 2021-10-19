@@ -6,22 +6,32 @@ import org.keithkim.demo.quicklog.Account;
 import org.keithkim.demo.quicklog.Accounts;
 import org.keithkim.demo.quicklog.Project;
 import org.keithkim.demo.quicklog.Projects;
+import org.keithkim.moja.monad.Async;
+import org.keithkim.moja.monad.Multi;
 import org.keithkim.safeql.query.Join;
 import org.keithkim.safeql.statement.Database;
 import org.keithkim.safeql.statement.Registry;
 import org.keithkim.safeql.statement.RawQueryStatement;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 import static java.util.Arrays.asList;
 
 public class DemoMain {
     public void demoCompose() {
         RawQueryStatement<Account> select = new RawQueryStatement<>("SELECT * FROM account", Account.class);
-        CompletableFuture<List<Account>> asyncAccounts = select.listAsync();
+        Async<Multi<Account>> asyncAccounts = select.multiAsync();
 
-        for (Account account : asyncAccounts.join()) {
+        Async<Accounts> asyncAccountsAndProjects = asyncAccounts.then(multiAccount -> {
+            return Async.async(() -> {
+                Accounts as = new Accounts(multiAccount.toList());
+                as.loadProjects();
+                return as;
+            });
+        });
+        Accounts accountsAndProjects = asyncAccountsAndProjects.join();
+
+        for (Account account : accountsAndProjects) {
             System.out.println("" + account);
         }
     }
@@ -35,7 +45,7 @@ public class DemoMain {
         List<JoinRow> accountAndProjects = Registry.using(asList(accountTable, projectTable), handle -> {
             handle.registerRowMapper(JoinRowMapper.forTypes(Account.class, Project.class));
 
-            return handle.createQuery("SELECT a.id a_id, a.full_name a_full_name, a.email a_email, a.plan_name a_plan_name, a.expires a_expires, "+
+            return handle.createQuery("SELECT a.id a_id, a.full_name a_full_name, a.email a_email, a.plan_name a_plan_name, a.expires_at a_expires_at, "+
                     "p.id p_id, p.account_id p_account_id, p.name p_name, p.domain p_domain "+
                     "FROM account a JOIN project p ON a.id = p.account_id "+
                     "WHERE p.account_id IN (<account_ids>)")
@@ -78,25 +88,16 @@ public class DemoMain {
         Registry.registerDefault(db);
 
         DemoMain demoMain = new DemoMain();
-        demoMain.demoCompose();
-
-//        CompletableFuture<Accounts> asyncAccounts = CompletableFuture.supplyAsync(demoMain::demoAccountsWhere);
-//        asyncAccounts.thenAcceptAsync(accounts -> {
-//            for (Account account : accounts) {
-//                System.out.println(account);
-//                sleep(100L);
-//            }
-//        });
-//        CompletionStage<Projects> asyncProjects = Async.pipeline(asyncAccounts, (accounts) -> demoMain.demoAccountsLoadProjects(accounts));
-//        asyncProjects.thenAccept(projects -> {
-//            for (Project project : projects) {
-//                System.out.println(project);
-//                sleep(100L);
-//            }
-//        });
-//        asyncAccounts.join();
-//        asyncProjects.toCompletableFuture().join();
-//
+//        demoMain.demoCompose();
 //        demoMain.demoJoin();
+
+        Accounts accounts = demoMain.demoAccountsWhere();
+        Projects projects = demoMain.demoAccountsLoadProjects(accounts);
+        for (Project project : projects) {
+            System.out.println("" + project);
+        }
+        for (Account account : accounts) {
+            System.out.println("" + account);
+        }
     }
 }

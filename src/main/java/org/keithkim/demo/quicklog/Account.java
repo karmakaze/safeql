@@ -40,17 +40,17 @@ public class Account extends Entity<Long> {
     public String fullName;
     public String email;
     public String planName;
-    public Instant expires;
+    public Instant expiresAt;
 
     public Map<Long, Project> projects = new HashMap<>();
 
-    @ConstructorProperties({"id", "full_name", "email", "plan_name", "expires"})
-    public Account(long id, String fullName, String email, String planName, Instant expires) {
+    @ConstructorProperties({"id", "full_name", "email", "plan_name", "expires_at"})
+    public Account(long id, String fullName, String email, String planName, Instant expiresAt) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
         this.planName = planName;
-        this.expires = expires;
+        this.expiresAt = expiresAt;
     }
 
     void addProject(Project project) {
@@ -58,7 +58,7 @@ public class Account extends Entity<Long> {
     }
 
     public String toString() {
-        return String.format("Account<id:%d, fullName:%s, email:%s, planName:%s, expires:%s, projects: %s>",
-                id, fullName, email, planName, expires, projects.values());
+        return String.format("Account<id:%d, fullName:%s, email:%s, planName:%s, expiresAt:%s, projects: %s>",
+                id, fullName, email, planName, expiresAt, projects.values());
     }
 }
