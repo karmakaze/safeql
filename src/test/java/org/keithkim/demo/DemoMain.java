@@ -88,16 +88,16 @@ public class DemoMain {
         Registry.registerDefault(db);
 
         DemoMain demoMain = new DemoMain();
-//        demoMain.demoCompose();
+        demoMain.demoCompose();
 //        demoMain.demoJoin();
 
-        Accounts accounts = demoMain.demoAccountsWhere();
-        Projects projects = demoMain.demoAccountsLoadProjects(accounts);
-        for (Project project : projects) {
-            System.out.println("" + project);
-        }
-        for (Account account : accounts) {
-            System.out.println("" + account);
-        }
+//        Accounts accounts = demoMain.demoAccountsWhere();
+//        Projects projects = demoMain.demoAccountsLoadProjects(accounts);
+//        for (Project project : projects) {
+//            System.out.println("" + project);
+//        }
+//        for (Account account : accounts) {
+//            System.out.println("" + account);
+//        }
     }
 }

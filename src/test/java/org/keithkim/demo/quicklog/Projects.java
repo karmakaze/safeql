@@ -20,7 +20,7 @@ public class Projects extends ArrayList<Project> {
     }
 
     public Set<Long> ids() {
-        return this.stream().map(project -> project.id).collect(toSet());
+        return this.stream().map(project -> project.row.id).collect(toSet());
     }
 
     public Projects whereAccountIdIn(Set<Long> accountIds) {

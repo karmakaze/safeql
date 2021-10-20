@@ -50,20 +50,18 @@ public class Project extends Entity<Long> {
         }
     }
 
-    public long id;
-    public long accountId;
-    public String name;
-    public String domain;
+    public final ProjectRow row;
 
     @ConstructorProperties({"id", "account_id", "name", "domain"})
     public Project(long id, long accountId, String name, String domain) {
-        this.id = id;
-        this.accountId = accountId;
-        this.name = name;
-        this.domain = domain;
+        row = new ProjectRow(id, accountId, name, domain);
     }
 
+    @Override
     public String toString() {
-        return String.format("Project<id:%d, accountId:%d, name:%s, domain:%s>", id, accountId, name, domain);
+        StringBuilder buffer = new StringBuilder("Project<");
+        row.intoString(buffer);
+        buffer.append(">");
+        return buffer.toString();
     }
 }

@@ -13,13 +13,13 @@ public class Accounts extends ArrayList<Account> {
     }
 
     public Set<Long> ids() {
-        return this.stream().map(account -> account.id).collect(toSet());
+        return this.stream().map(account -> account.row.id).collect(toSet());
     }
 
     public Map<Long, Account> byId() {
         Map<Long, Account> accountById = new HashMap<>(size());
         for (Account account : this) {
-            accountById.put(account.id, account);
+            accountById.put(account.row.id, account);
         }
         return accountById;
     }
@@ -37,7 +37,7 @@ public class Accounts extends ArrayList<Account> {
         projects = projects.whereAccountIdIn(accountIds);
 
         for (Project project : projects) {
-            Account account = accountById.get(project.accountId);
+            Account account = accountById.get(project.row.accountId);
             if (account != null) {
                 account.addProject(project);
             }

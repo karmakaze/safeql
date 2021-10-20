@@ -36,29 +36,26 @@ public class Account extends Entity<Long> {
         }
     }
 
-    public Long id;
-    public String fullName;
-    public String email;
-    public String planName;
-    public Instant expiresAt;
+    public final AccountRow row;
 
     public Map<Long, Project> projects = new HashMap<>();
 
     @ConstructorProperties({"id", "full_name", "email", "plan_name", "expires_at"})
     public Account(long id, String fullName, String email, String planName, Instant expiresAt) {
-        this.id = id;
-        this.fullName = fullName;
-        this.email = email;
-        this.planName = planName;
-        this.expiresAt = expiresAt;
+        row = new AccountRow(id, fullName, email, planName, expiresAt);
     }
 
     void addProject(Project project) {
-        this.projects.put(project.id, project);
+        this.projects.put(project.row.id, project);
     }
 
+    @Override
     public String toString() {
-        return String.format("Account<id:%d, fullName:%s, email:%s, planName:%s, expiresAt:%s, projects: %s>",
-                id, fullName, email, planName, expiresAt, projects.values());
+        StringBuilder buffer = new StringBuilder("Account<");
+        row.intoString(buffer);
+        String projects = String.format("%s", this.projects.values());
+        buffer.append(", projects:[ " + projects.substring(1, projects.length() - 1) + " ]");
+        buffer.append(">");
+        return buffer.toString();
     }
 }
