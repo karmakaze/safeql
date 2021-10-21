@@ -2,9 +2,9 @@ package org.keithkim.safeql.query;
 
 import com.google.common.base.Joiner;
 import org.junit.jupiter.api.Test;
-import org.keithkim.demo.quicklog.Account;
-import org.keithkim.demo.quicklog.Project;
+import org.keithkim.safeqldemo.projects.Account;
 import org.keithkim.safeql.schema.Table;
+import org.keithkim.safeqldemo.projects.Project;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;

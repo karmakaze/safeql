@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class Registry {
-    private static Database defaultDb = null;
+public class TableDbRegistry {
+    private static volatile Database defaultDb = null;
     private static final Map<Class<? extends Entity>, Database> entityDatabase = new HashMap<>();
 
     public static void registerDefault(Database db) {

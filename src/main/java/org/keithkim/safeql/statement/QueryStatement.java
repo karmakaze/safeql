@@ -21,7 +21,7 @@ public interface QueryStatement<E extends Entity> extends Statement {
 
         List<Table<? extends Entity>> tables = stmt.tables();
 
-        return Registry.using(tables, handle -> {
+        return TableDbRegistry.using(tables, handle -> {
             for (Table<?> table : tables) {
                 if (table.alias().isPresent()) {
                     handle.registerRowMapper(ConstructorMapper.factory(table.entityClass, table.alias().get() + "_"));

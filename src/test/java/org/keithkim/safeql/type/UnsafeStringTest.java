@@ -2,8 +2,8 @@ package org.keithkim.safeql.type;
 
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
-import org.keithkim.demo.quicklog.Project;
 import org.keithkim.safeql.schema.Table;
+import org.keithkim.safeqldemo.projects.Project;
 
 import static org.junit.jupiter.api.Assertions.*;
 

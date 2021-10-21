@@ -1,15 +1,15 @@
-package org.keithkim.demo.quicklog;
+package org.keithkim.safeqldemo.projects;
 
 import java.time.Instant;
 
-public class AccountRow {
+public class AccountRow0 {
     public Long id;
     public String fullName;
     public String email;
     public String planName;
     public Instant expiresAt;
 
-    public AccountRow(long id, String fullName, String email, String planName, Instant expiresAt) {
+    public AccountRow0(long id, String fullName, String email, String planName, Instant expiresAt) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;

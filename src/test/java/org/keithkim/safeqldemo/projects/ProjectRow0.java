@@ -1,12 +1,12 @@
-package org.keithkim.demo.quicklog;
+package org.keithkim.safeqldemo.projects;
 
-public class ProjectRow {
+public class ProjectRow0 {
     public long id;
     public long accountId;
     public String name;
     public String domain;
 
-    public ProjectRow(long id, long accountId, String name, String domain) {
+    public ProjectRow0(long id, long accountId, String name, String domain) {
         this.id = id;
         this.accountId = accountId;
         this.name = name;

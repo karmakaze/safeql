@@ -1,8 +1,8 @@
 package org.keithkim.safeql.query;
 
 import org.junit.jupiter.api.Test;
-import org.keithkim.demo.quicklog.Account;
-import org.keithkim.demo.quicklog.Project;
+import org.keithkim.safeqldemo.projects.Account;
+import org.keithkim.safeqldemo.projects.Project;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

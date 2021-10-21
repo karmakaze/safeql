@@ -1,10 +1,29 @@
-package org.keithkim.demo.quicklog;
+package org.keithkim.safeqldemo.projects;
 
 import org.keithkim.safeql.schema.Entity;
 
 import java.beans.ConstructorProperties;
 
-public class Project extends Entity<Long> {
+public class Project0 extends Entity<Long> {
+    public final ProjectRow0 row;
+
+    public Long id() {
+        return row.id;
+    }
+
+    @ConstructorProperties({"id", "account_id", "name", "domain"})
+    public Project0(long id, long accountId, String name, String domain) {
+        row = new ProjectRow0(id, accountId, name, domain);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder buffer = new StringBuilder("Project<");
+        row.intoString(buffer);
+        buffer.append(">");
+        return buffer.toString();
+    }
+
     public static class Table extends org.keithkim.safeql.schema.Table<Project> {
         public Table(String tableExpr, String alias) {
             super(Project.class, tableExpr, alias);
@@ -48,20 +67,5 @@ public class Project extends Entity<Long> {
         public Domain domainCol(String alias) {
             return new Domain(alias);
         }
-    }
-
-    public final ProjectRow row;
-
-    @ConstructorProperties({"id", "account_id", "name", "domain"})
-    public Project(long id, long accountId, String name, String domain) {
-        row = new ProjectRow(id, accountId, name, domain);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder buffer = new StringBuilder("Project<");
-        row.intoString(buffer);
-        buffer.append(">");
-        return buffer.toString();
     }
 }

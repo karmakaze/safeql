@@ -3,7 +3,7 @@ package org.keithkim.safeql.schema;
 import com.google.common.base.Joiner;
 import lombok.EqualsAndHashCode;
 import org.keithkim.safeql.expression.Expr;
-import org.keithkim.safeql.statement.Registry;
+import org.keithkim.safeql.statement.TableDbRegistry;
 
 import java.util.*;
 
@@ -62,7 +62,7 @@ public class Table<E extends Entity> extends Expr<E> {
         } else {
             whereCriteria = "";
         }
-        return Registry.using(singletonList(this), handle -> {
+        return TableDbRegistry.using(singletonList(this), handle -> {
             return handle.createQuery("SELECT * FROM " + this.sql() + whereCriteria)
                     .mapTo(entityClass)
                     .list();

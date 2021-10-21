@@ -1,16 +1,12 @@
 package org.keithkim.safeql.query;
 
 import org.junit.jupiter.api.Test;
-import org.keithkim.demo.quicklog.Account;
-import org.keithkim.demo.quicklog.Project;
-import org.keithkim.safeql.query.Select;
+import org.keithkim.safeqldemo.projects.Account;
 import org.keithkim.safeql.schema.Entity;
 import org.keithkim.safeql.schema.Table;
+import org.keithkim.safeqldemo.projects.Project;
 
 import java.beans.ConstructorProperties;
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,6 +43,11 @@ public class SelectTest {
             this.a = a;
             this.b = b;
             this.c = c;
+        }
+
+        @Override
+        public Long id() {
+            return a;
         }
     }
 }

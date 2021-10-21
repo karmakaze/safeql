@@ -13,7 +13,7 @@ public interface UpdateStatement extends Statement {
         String sql = sql();
         log.info("SQL: {}", sql);
 
-        return Registry.using(emptyList(), handle -> handle.createUpdate(sql).execute());
+        return TableDbRegistry.using(emptyList(), handle -> handle.createUpdate(sql).execute());
     }
 
     default CompletableFuture<Integer> executeAsync() {
