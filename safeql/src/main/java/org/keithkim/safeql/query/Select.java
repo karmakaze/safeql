@@ -38,7 +38,7 @@ public class Select<E extends Entity> extends Expr<Rows<E>> {
     }
 
     public String sql() {
-        Map<String, ?> binds = binds();
+        Map<String, ?> binds = localBinds();
         List<String> cols;
         if (columns.isEmpty()) {
             String aliasStar = table.alias().isPresent() ? table.alias().get() + ".*" : "*";

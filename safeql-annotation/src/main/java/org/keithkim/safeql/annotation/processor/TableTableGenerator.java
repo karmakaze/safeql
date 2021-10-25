@@ -40,11 +40,23 @@ public class TableTableGenerator {
         String packageName = entityClassName.packageName();
         String simpleName = entityClassName.simpleName();
 
-        TypeName tableEntity = ParameterizedTypeName.get(ClassName.get("org.keithkim.safeql.schema", "Table"), entityClassName);
+        String tableName = tableAnnotation.name();
+        if (tableName == null || tableName.isEmpty()) {
+            tableName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, simpleName);
+        }
+
+        ClassName safeqlTableClassName = ClassName.get("org.keithkim.safeql.schema", "Table");
+
+        TypeName tableEntity = ParameterizedTypeName.get(safeqlTableClassName, entityClassName);
         TypeSpec.Builder tableClassBuilder = TypeSpec.classBuilder("Table")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .superclass(tableEntity)
-                .addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
+                .superclass(tableEntity);
+
+        tableClassBuilder.addField(FieldSpec.builder(ClassName.bestGuess("Table"), "DEFAULT",
+                        Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                .initializer("new Table($S, null)", tableName).build());
+
+        tableClassBuilder.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
                     .addParameter(String.class, "tableExpr")
                     .addParameter(String.class, "alias")
                     .addStatement("super($L.class, tableExpr, alias)", simpleName)
