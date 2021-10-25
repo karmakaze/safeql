@@ -98,7 +98,7 @@ class ExprTest {
     void nobinds_binds_returnsEmptyMap() {
         Expr<String> subject = new Expr<>("SELECT * FROM account");
 
-        assertEquals(emptyMap(), subject.binds());
+        assertEquals(emptyMap(), subject.localBinds());
     }
 
     @Test
@@ -109,58 +109,8 @@ class ExprTest {
         subject.bind("limit", 10);
         subject.bind("offset", 5);
 
-        assertTrue(subject.binds() instanceof SortedMap);
-        assertEquals(ImmutableMap.of("min_id", 1000, "max_id", 2000, "limit", 10, "offset", 5), subject.binds());
-    }
-
-    @Test
-    void withLocalBinds_sql_shouldUseNumberedNames() {
-        Expr<String> subject = new Expr<>("SELECT * FROM account WHERE id BETWEEN :min_id AND :max_id LIMIT :limit OFFSET :offset");
-        subject.bindLocal("min_id", 1000);
-        subject.bindLocal("max_id", 2000);
-        subject.bindLocal("limit", 10);
-        subject.bindLocal("offset", 5);
-
-        Pattern pattern = Pattern.compile("SELECT \\* FROM account WHERE id BETWEEN :(min_id_[0-9]+) AND :(max_id_[0-9]+) LIMIT :(limit_[0-9]+) OFFSET :(offset_[0-9]+)");
-        assertMatches(pattern, subject.sql());
-
-        Set<String> numberedNames = new HashSet<>();
-        Matcher matcher = pattern.matcher(subject.sql());
-        if (matcher.find()) {
-            for (int i = 1; i <= matcher.groupCount(); i++) {
-                numberedNames.add(matcher.group(i));
-            }
-        }
-        assertEquals(numberedNames, subject.localBinds().keySet());
-    }
-
-    @Test
-    void withBindsAndLocalBinds_bind_shouldNotChangeLocalBinds() {
-        Expr<String> subject = new Expr<>("SELECT * FROM account WHERE id BETWEEN :min_id AND :max_id LIMIT :limit OFFSET :offset");
-        subject.bindLocal("min_id", 1000);
-        subject.bindLocal("max_id", 2000);
-        subject.bind("min_id", 3000);
-        subject.bind("max_id", 4000);
-        subject.bind("limit", 10);
-        subject.bind("offset", 5);
-
-        assertEquals(ImmutableMap.of("limit", 10, "offset", 5), subject.binds());
-
-        Pattern pattern = Pattern.compile("SELECT \\* FROM account WHERE id BETWEEN :(min_id_[0-9]+) AND :(max_id_[0-9]+) LIMIT :limit OFFSET :offset");
-        assertMatches(pattern, subject.sql());
-
-        SortedSet<String> numberedNames = new TreeSet<>();
-        Matcher matcher = pattern.matcher(subject.sql());
-        if (matcher.find()) {
-            for (int i = 1; i <= matcher.groupCount(); i++) {
-                numberedNames.add(matcher.group(i));
-            }
-        }
-        assertEquals(numberedNames, subject.localBinds().keySet());
-
-        assertTrue(numberedNames.first().startsWith("max_id_"));
-        assertTrue(numberedNames.last().startsWith("min_id_"));
-        assertEquals(ImmutableMap.of(numberedNames.first(), 2000, numberedNames.last(), 1000), subject.localBinds());
+        assertTrue(subject.localBinds() instanceof SortedMap);
+        assertEquals(ImmutableMap.of("min_id", 1000, "max_id", 2000, "limit", 10, "offset", 5), subject.localBinds());
     }
 
     @Test
@@ -168,7 +118,8 @@ class ExprTest {
         Expr<String> subject = Expr.expr("SELECT * FROM account WHERE id = ?", 1000);
         String varName = "_1_" + subject.objectId;
 
-        assertEquals("<SQL: SELECT * FROM account WHERE id = :"+varName+"; BIND: "+varName+":1000>", subject.toString());
+        assertEquals("<SQL: SELECT * FROM account WHERE id = :"+varName+"; BIND: "+varName+":1000>",
+                subject.toString());
     }
 
     @Test

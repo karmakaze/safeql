@@ -5,8 +5,8 @@ import org.keithkim.safeql.expression.Expr;
 import java.util.Collection;
 
 public class Predicates {
-    public static final Predicate FALSE = new Predicate("FALSE") {};
-    public static final Predicate TRUE = new Predicate("TRUE") {};
+    public static final Predicate FALSE = new Predicate("FALSE", true) {};
+    public static final Predicate TRUE = new Predicate("TRUE", true ) {};
 
     private final static BooleanPredicateFactory ALL_OF = BooleanPredicateFactory.newOperation("AND", Predicates.TRUE,
             (sql, predicates) -> {
@@ -92,6 +92,10 @@ public class Predicates {
 
     public static <T> Predicate GTE(Expr<T> left, Expr<T> right) {
         return new GreaterThanOrEqual<>(left, right);
+    }
+
+    public static <T> Predicate IN(Expr<T> left, Expr<T> right) {
+        return new In(left, right);
     }
 
     public static Predicate LIKE(Expr<String> subject, Expr<String> pattern) {

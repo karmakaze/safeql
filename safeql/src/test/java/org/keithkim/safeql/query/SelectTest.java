@@ -25,7 +25,7 @@ public class SelectTest {
         Table<Abc> subQuery1 = new Table<>(Abc.class, "SELECT 1 a, 2 b, 3 c UNION ALL SELECT 4, 5, 6", "t1");
 
         Table<Account0> subQuery2 = new Table<>(Account0.class, "SELECT * FROM ?", "t2");
-        subQuery2.bindLocal("?", subQuery1);
+        subQuery2.bind("?", subQuery1);
 
         Select<Account0> selectFromT2 = new Select(subQuery2);
 

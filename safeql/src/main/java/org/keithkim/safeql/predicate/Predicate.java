@@ -7,6 +7,10 @@ public abstract class Predicate extends Expr<Boolean> {
         super(sql);
     }
 
+    protected Predicate(String sql, boolean isTerm) {
+        super(sql, isTerm);
+    }
+
     public boolean isKnownFalse() {
         return "FALSE".equalsIgnoreCase(sql()) || Boolean.FALSE == eval();
     }

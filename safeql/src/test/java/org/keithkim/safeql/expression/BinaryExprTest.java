@@ -42,9 +42,22 @@ public class BinaryExprTest {
     @Test
     void localBoundExpr_bindComposite_shouldNotChangeNestedLocalBinds() {
         Expr<Boolean> expr1 = Expr.expr("x BETWEEN ? AND ?", 1, 2);
+        String expectExpr1 = String.format("<SQL: x BETWEEN :_1_%s AND :_2_%s; BIND: _1_%s:1, _2_%s:2>",
+                expr1.objectId, expr1.objectId, expr1.objectId, expr1.objectId);
+        assertEquals(expectExpr1, expr1.toString());
+
         Expr<Boolean> expr2 = Expr.expr("y BETWEEN :y1 AND :y2", ImmutableMap.of("y1", 3, "y2", 4));
+        String expectExpr2 = String.format("<SQL: y BETWEEN :y1_%s AND :y2_%s; BIND: y1_%s:3, y2_%s:4>",
+                expr2.objectId, expr2.objectId, expr2.objectId, expr2.objectId);
+        assertEquals(expectExpr2, expr2.toString());
 
         Expr<Boolean> expr = new BinaryExpr(expr1, "AND", expr2) {};
+        String expectExpr = String.format("<SQL: (x BETWEEN :_1_%s AND :_2_%s) AND (y BETWEEN :y1_%s AND :y2_%s); "+
+                        "BIND: _1_%s:1, _2_%s:2, y1_%s:3, y2_%s:4>",
+                expr1.objectId, expr1.objectId, expr2.objectId, expr2.objectId,
+                expr1.objectId, expr1.objectId, expr2.objectId, expr2.objectId);
+
+        assertEquals(expectExpr, expr.toString());
 
         Map<String, Object> binds = new TreeMap<>();
         for (int i = 1; i <= 2; i++) {
@@ -59,10 +72,10 @@ public class BinaryExprTest {
 
         assertEquals(expected, expr.toString());
 
-        expr.bindLocal("x1", 5);
-        expr.bindLocal("x2", 6);
-        expr.bindLocal("?", 7);
-        expr.bindLocal("?", 8);
+        expr.bind("x1", 5);
+        expr.bind("x2", 6);
+        expr.bind("?", 7);
+        expr.bind("?", 8);
 
         assertEquals(expected, expr.toString());
     }
