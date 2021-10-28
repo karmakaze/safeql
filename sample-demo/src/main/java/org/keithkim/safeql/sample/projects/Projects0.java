@@ -1,13 +1,16 @@
 package org.keithkim.safeql.sample.projects;
 
 import org.keithkim.safeql.expression.Expr;
+import org.keithkim.safeql.expression.SqlSet;
 import org.keithkim.safeql.predicate.Predicate;
 import org.keithkim.safeql.predicate.Predicates;
 import org.keithkim.safeql.schema.Entities;
 import org.keithkim.safeql.schema.Table;
+import org.keithkim.safeql.type.SetExpr;
 
 import java.util.*;
 
+import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toSet;
 
 public class Projects0 extends Entities<Projects0, Project> {
@@ -39,7 +42,7 @@ public class Projects0 extends Entities<Projects0, Project> {
     public Projects0 whereAccountIdIn(Set<Long> accountIds) {
         SortedMap<String, Object> bindVars = new TreeMap<String, Object>() {{ put("account_ids", accountIds); }};
 //        Predicate predicate = new Predicate("account_id IN (<account_ids>)", bindVars) {};
-        Expr<String> right = Expr.expr(":account_ids", bindVars);
+        SqlSet<String> right = new SetExpr(":account_ids", bindVars);
         Predicate predicate = Predicates.IN(new Expr("account_id"), right);
         return where(predicate);
 //        List<Project> projects = TableDbRegistry.using(singletonList(new Account.Table("account", null)), handle -> {
@@ -53,7 +56,13 @@ public class Projects0 extends Entities<Projects0, Project> {
     }
 
     public Projects0 where(String cond) {
-        return where(new Predicate(cond) {});
+        Predicate predicate = new Predicate() {
+            public String sql() { return cond; }
+            public boolean isTerm() { return false; }
+            public Set<Map.Entry<String, Object>> allBindEntries() { return emptySet(); }
+            public Object eval() { return null; }
+        };
+        return where(predicate);
 //        List<Project> projects = TableDbRegistry.using(singletonList(new Project.Table("project", null)), handle -> {
 //            handle.registerRowMapper(ConstructorMapper.factory(Project.class));
 //            String whereClause = "";

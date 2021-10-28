@@ -37,8 +37,6 @@ public class Accounts0 extends ArrayList<Account> {
         projects = projects.whereAccountIdIn(accountIds);
 
         for (Project project : projects) {
-            System.out.println("project.row.accountId=" + project.row.accountId);
-            System.out.println("project.row.accountId.class.name=" + project.row.accountId.getClass().getCanonicalName());
             Account account = accountById.get(project.row.accountId);
             if (account != null) {
                 account.addProject(project);

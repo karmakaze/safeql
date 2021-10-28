@@ -1,5 +1,7 @@
 package org.keithkim.safeql.schema;
 
+import org.jdbi.v3.core.array.SqlArrayArgumentFactory;
+import org.jdbi.v3.core.internal.IterableLike;
 import org.jdbi.v3.core.result.ResultIterable;
 import org.jdbi.v3.core.statement.Query;
 import org.keithkim.safeql.predicate.Predicate;
@@ -26,18 +28,26 @@ public abstract class Entities<EE extends Entities, E extends Entity> extends Ar
 
     public EE where(Predicate cond) {
         List<E> entities = TableDbRegistry.using(singletonList(table), handle -> {
-            String whereClause = "";
+            String sql = String.format("SELECT * FROM %s", table.sqlNoAlias());
             if (cond != null) {
-                whereClause = " WHERE " + cond.sql();
+                sql = sql + " WHERE " + cond.sql();
+                Set<Map.Entry<String, Object>> s = cond.allBindEntries();
+                for (Map.Entry<String, Object> me : s) {
+                    Object arg = me.getValue();
+                    if (arg instanceof Collection) {
+                        String name = me.getKey();
+                        sql = sql.replaceAll(":"+name+"\\b", "(<"+name+">)");
+                    }
+                }
             }
-            Query query = handle.createQuery(String.format("SELECT * FROM %s %s", table.sqlNoAlias(), whereClause));
+            Query query = handle.createQuery(sql);
             if (cond != null) {
                 Set<Map.Entry<String, Object>> s = cond.allBindEntries();
                 for (Map.Entry<String, Object> me : s) {
                     String name = me.getKey();
                     Object arg = me.getValue();
                     if (arg instanceof Collection) {
-                        query = query.bindList(name, arg);
+                        query = query.bindList(name, (Collection) arg);
                     } else {
                         query = query.bind(name, arg);
                     }
