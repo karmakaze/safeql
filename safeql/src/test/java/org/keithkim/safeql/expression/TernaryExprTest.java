@@ -8,7 +8,7 @@ import static org.keithkim.safeql.expression.Expr.expr;
 class TernaryExprTest {
     @Test
     void sql() {
-        TernaryExpr<Boolean> ternaryExpr = new TernaryExpr<Boolean>(expr("expr1"), "?", expr("expr2"), ":", expr("expr3")) {};
+        TernaryExpr<String, Boolean, String, String> ternaryExpr = new TernaryExpr<String, Boolean, String, String>(expr("expr1"), "?", expr("expr2"), ":", expr("expr3")) {};
         assertEquals("expr1 ? expr2 : expr3", ternaryExpr.sql());
     }
 }

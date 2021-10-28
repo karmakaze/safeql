@@ -1,14 +1,32 @@
 package org.keithkim.safeql.predicate;
 
-import org.keithkim.safeql.expression.Expr;
+import org.keithkim.safeql.expression.*;
 
-import java.util.Collection;
+import java.util.*;
+
+import static java.util.Collections.emptySet;
 
 public class Predicates {
-    public static final Predicate FALSE = new Predicate("FALSE", true) {};
-    public static final Predicate TRUE = new Predicate("TRUE", true ) {};
+    private static class LiteralPredicate extends LiteralExpr<Boolean> implements Predicate {
+        final boolean value;
+        public LiteralPredicate(String sqlLiteral, boolean value) {
+            super(sqlLiteral, emptySet());
+            this.value = value;
+        }
+        @Override
+        public boolean isKnownTrue() {
+            return value;
+        }
+        @Override
+        public boolean isKnownFalse() {
+            return !value;
+        }
+    }
 
-    private final static BooleanPredicateFactory ALL_OF = BooleanPredicateFactory.newOperation("AND", Predicates.TRUE,
+    public static final Predicate FALSE = new LiteralPredicate("FALSE", false);
+    public static final Predicate TRUE = new LiteralPredicate("TRUE", true );
+
+    private final static PredicateFactory ALL_OF = PredicateFactory.newOperation("AND", Predicates.TRUE,
             (sql, predicates) -> {
                 boolean isKnownTrue = true;
                 for (Predicate predicate : predicates) {
@@ -25,7 +43,7 @@ public class Predicates {
                 return sql;
             });
 
-    private final static BooleanPredicateFactory ANY_OF = BooleanPredicateFactory.newOperation("OR", Predicates.FALSE,
+    private final static PredicateFactory ANY_OF = PredicateFactory.newOperation("OR", Predicates.FALSE,
             (sql, predicates) -> {
                 boolean isKnownFalse = true;
                 for (Predicate predicate : predicates) {
@@ -54,7 +72,7 @@ public class Predicates {
         return ALL_OF.newPredicate(predicates);
     }
 
-    public static Predicate ALL(Collection<? extends Predicate> predicates) {
+    public static Predicate ALL(List<Predicate> predicates) {
         return ALL_OF.newPredicate(predicates);
     }
 
@@ -66,7 +84,7 @@ public class Predicates {
         return ANY_OF.newPredicate(predicates);
     }
 
-    public static Predicate ANY(Collection<? extends Predicate> predicates) {
+    public static Predicate ANY(List<Predicate> predicates) {
         return ANY_OF.newPredicate(predicates);
     }
 
@@ -94,8 +112,8 @@ public class Predicates {
         return new GreaterThanOrEqual<>(left, right);
     }
 
-    public static <T> Predicate IN(Expr<T> left, Expr<T> right) {
-        return new In(left, right);
+    public static <T> Predicate IN(Sql<T> left, SqlSet<T> right) {
+        return new In<>(left, right);
     }
 
     public static Predicate LIKE(Expr<String> subject, Expr<String> pattern) {

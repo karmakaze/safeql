@@ -9,26 +9,26 @@ import java.util.function.Function;
 import static java.util.stream.Collectors.toList;
 
 @EqualsAndHashCode(callSuper = true)
-public class NAryExpr<T> extends Expr<T> {
+public class NAryExpr<S, T> extends Expr<S> {
     private final String operator;
-    private final Expr<T> identity;
+    private final Expr<S> identity;
     private final Expr<T>[] exprs;
 
-    public NAryExpr(String operator, Expr<T> identity, Expr<T>... exprs) {
+    public NAryExpr(String operator, Expr<S> identity, Expr<T>... exprs) {
         super(expandedSql(operator, identity, exprs), bindingEntries(exprs), false);
         this.operator = operator;
         this.identity = identity;
         this.exprs = exprs;
     }
 
-    protected NAryExpr(String sql, String operator, Expr<T> identity, Expr<T>... exprs) {
+    protected NAryExpr(String sql, String operator, Expr<S> identity, Expr<T>... exprs) {
         super(sql, bindingEntries(exprs), false);
         this.operator = operator;
         this.identity = identity;
         this.exprs = exprs;
     }
 
-    protected static <T> String expandedSql(String operator, Expr<T> identity, Expr<T>... exprs) {
+    protected static <S, T> String expandedSql(String operator, Expr<S> identity, Expr<T>... exprs) {
         if (exprs.length == 0) {
             return identity.sql;
         } else if (operator.endsWith("()")) {

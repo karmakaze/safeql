@@ -67,8 +67,11 @@ public class UnsafeStringTest {
                 "SELECT id, name FROM project WHERE name = :name");
 
         rawSelect.bind("name", unsafe);
-        assertEquals("SELECT id, name FROM project WHERE name = :name", rawSelect.sql());
-        assertEquals(ImmutableMap.of("name", unsafe.inject()), rawSelect.localBinds());
-        assertEquals("<SQL: SELECT id, name FROM project WHERE name = :name; BIND: name:Robert'); DROP TABLE Students; -->", rawSelect.toString());
+        String expected = String.format("SELECT id, name FROM project WHERE name = :name_%s", rawSelect.objectId);
+        assertEquals(expected, rawSelect.sql());
+        assertEquals(ImmutableMap.of("name_"+rawSelect.objectId, unsafe.inject()), rawSelect.localBinds());
+        expected = String.format("<SQL: SELECT id, name FROM project WHERE name = :name_%s; "+
+                "BIND: name_%s:Robert'); DROP TABLE Students; -->", rawSelect.objectId, rawSelect.objectId);
+        assertEquals(expected, rawSelect.toString());
     }
 }

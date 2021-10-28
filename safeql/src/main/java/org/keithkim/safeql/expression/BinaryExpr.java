@@ -1,31 +1,34 @@
 package org.keithkim.safeql.expression;
 
-import com.google.common.base.Joiner;
+import java.util.Map;
 
-import java.util.List;
+import static java.util.Collections.emptySet;
 
-import static java.util.stream.Collectors.toList;
+public abstract class BinaryExpr<S, L, R> extends Expr<S> {
+    private final Sql<L> left;
+    private final String operator;
+    private final Sql<R> right;
 
-public abstract class BinaryExpr<T> extends NAryExpr<T> {
-    public BinaryExpr(Expr<T> left, String operator, Expr<T> right) {
-        super(expandedSql(operator, null, left, right), operator, null, left, right);
+    public BinaryExpr(Sql<L> left, String operator, Sql<R> right) {
+        this(expandedSql(left, operator, right), left, operator, right);
     }
 
-    protected BinaryExpr(String sql, Expr<T> left, String operator, Expr<T> right) {
-        super(sql, operator, null, left, right);
+    protected BinaryExpr(String sql, Sql<L> left, String operator, Sql<R> right) {
+        super(sql, operator.endsWith("()"), emptySet(), true);
+        this.left = left;
+        this.operator = operator;
+        this.right = right;
+        for (Sql<?> sqlExpr : new Sql[] {left, right}) {
+            for (Map.Entry<String, Object> me : sqlExpr.allBindEntries()) {
+                localBinds().put(me.getKey(), me.getValue());
+            }
+        }
     }
 
-//    public Map<String, ?> allBinds() {
-//        Map<String, Object> allBinds = (Map<String, Object>) super.allBinds();
-//        Map<String, Object> allBind0 = (Map<String, Object>) component(0).allBinds();
-//        Map<String, Object> allBind1 = (Map<String, Object>) component(1).allBinds();
-//        if (!allBinds.isEmpty() && (!allBind0.isEmpty() || !allBind1.isEmpty())
-//                || !allBind0.isEmpty() && !allBind1.isEmpty()) {
-//            allBinds = new TreeMap<>(allBinds);
-//            allBinds.putAll(allBind0);
-//            allBinds.putAll(allBind1);
-//            return allBinds;
-//        }
-//        return ObjectHelpers.firstNonNull(allBinds, allBind0, allBind1);
-//    }
+    protected static <L, R> String expandedSql(Sql<L> left, String operator, Sql<R> right) {
+        if (operator.endsWith("()")) {
+            return operator.substring(0, operator.length()-1) + left.sql() +", "+ right.sql() +")";
+        }
+        return sqlTerm(left) +" "+ operator +" "+ sqlTerm(right);
+    }
 }

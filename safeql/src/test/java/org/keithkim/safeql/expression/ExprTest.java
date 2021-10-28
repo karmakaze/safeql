@@ -91,7 +91,10 @@ class ExprTest {
         subject.bind("limit", 10);
         subject.bind("offset", 5);
 
-        assertEquals("SELECT * FROM account WHERE id BETWEEN :min_id AND :max_id LIMIT :limit OFFSET :offset", subject.sql());
+        String expected = String.format("SELECT * FROM account WHERE id BETWEEN :min_id_%s AND :max_id_%s "+
+                        "LIMIT :limit_%s OFFSET :offset_%s", subject.objectId, subject.objectId,
+                                                             subject.objectId, subject.objectId);
+        assertEquals(expected, subject.sql());
     }
 
     @Test
@@ -109,8 +112,24 @@ class ExprTest {
         subject.bind("limit", 10);
         subject.bind("offset", 5);
 
-        assertTrue(subject.localBinds() instanceof SortedMap);
-        assertEquals(ImmutableMap.of("min_id", 1000, "max_id", 2000, "limit", 10, "offset", 5), subject.localBinds());
+        assertTrue(subject.localBinds() instanceof LinkedHashMap);
+        Map<String, Integer> expected = ImmutableMap.of("min_id_"+subject.objectId, 1000,
+                "max_id_"+subject.objectId, 2000,
+                "limit_"+subject.objectId, 10,
+                "offset_"+subject.objectId, 5);
+        assertEquals(expected, subject.localBinds());
+    }
+
+    @Test
+    void bindNamed_again_ignored() {
+        Expr<String> subject = Expr.expr("SELECT * FROM account WHERE id = :id");
+        subject.bind("id", 1);
+        String expected = String.format("<SQL: SELECT * FROM account WHERE id = :id_%s; BIND: id_%s:1>",
+                subject.objectId, subject.objectId);
+        assertEquals(expected, subject.toString());
+
+        subject.bind("id", 2);
+        assertEquals(expected, subject.toString());
     }
 
     @Test
@@ -137,6 +156,18 @@ class ExprTest {
     }
 
     @Test
+    void bindPositional_again_ignored() {
+        Expr<String> subject = Expr.expr("SELECT * FROM account WHERE id = ?");
+        subject.bind("?", 1);
+        String expected = String.format("<SQL: SELECT * FROM account WHERE id = :_1_%s; BIND: _1_%s:1>",
+                subject.objectId, subject.objectId);
+        assertEquals(expected, subject.toString());
+
+        subject.bind("?", 2);
+        assertEquals(expected, subject.toString());
+    }
+
+    @Test
     void nobinds_toString_shouldFormatInAngleQuotes() {
         Expr<String> subject = new Expr<>("SELECT * FROM account");
 
@@ -148,7 +179,9 @@ class ExprTest {
         Expr<String> subject = new Expr<>("SELECT * FROM account WHERE id >= :min_id");
         subject.bind("min_id", 1000);
 
-        assertEquals("<SQL: SELECT * FROM account WHERE id >= :min_id; BIND: min_id:1000>", subject.toString());
+        String expected = String.format("<SQL: SELECT * FROM account WHERE id >= :min_id_%s; BIND: min_id_%s:1000>",
+                subject.objectId, subject.objectId);
+        assertEquals(expected, subject.toString());
     }
 
     @Test
@@ -159,7 +192,10 @@ class ExprTest {
         subject.bind("limit", 10);
         subject.bind("offset", 5);
 
-        assertEquals("<SQL: SELECT * FROM account WHERE id BETWEEN :min_id AND :max_id LIMIT :limit OFFSET :offset;"+
-                " BIND: limit:10, max_id:2000, min_id:1000, offset:5>", subject.toString());
+        String expected = String.format("<SQL: SELECT * FROM account WHERE id BETWEEN :min_id_%s AND :max_id_%s "+
+                "LIMIT :limit_%s OFFSET :offset_%s; BIND: min_id_%s:1000, max_id_%s:2000, limit_%s:10, offset_%s:5>",
+                subject.objectId, subject.objectId, subject.objectId, subject.objectId,
+                subject.objectId, subject.objectId, subject.objectId, subject.objectId);
+        assertEquals(expected, subject.toString());
     }
 }

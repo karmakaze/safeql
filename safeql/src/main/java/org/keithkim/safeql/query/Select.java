@@ -48,7 +48,7 @@ public class Select<E extends Entity> extends Expr<Rows<E>> {
         }
         String fromTable = "";
         if (table != Sys.Table.none) {
-            fromTable = " FROM "+ table.sql();
+            fromTable = " FROM " + table.sqlTerm();
         }
         return String.format("SELECT %s" + fromTable, Joiner.on(", ").join(cols));
     }

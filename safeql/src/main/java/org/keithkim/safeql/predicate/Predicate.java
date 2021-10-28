@@ -1,22 +1,14 @@
 package org.keithkim.safeql.predicate;
 
-import org.keithkim.safeql.expression.Expr;
+import org.keithkim.safeql.expression.Eval;
+import org.keithkim.safeql.expression.SqlScalar;
 
-public abstract class Predicate extends Expr<Boolean> {
-    public Predicate(String sql) {
-        super(sql);
-    }
-
-    protected Predicate(String sql, boolean isTerm) {
-        super(sql, isTerm);
-    }
-
-    public boolean isKnownFalse() {
+public interface Predicate extends Eval, SqlScalar<Boolean> {
+    default boolean isKnownFalse() {
         return "FALSE".equalsIgnoreCase(sql()) || Boolean.FALSE == eval();
     }
 
-    public boolean isKnownTrue() {
+    default boolean isKnownTrue() {
         return "TRUE".equalsIgnoreCase(sql()) || Boolean.TRUE == eval();
     }
-
 }

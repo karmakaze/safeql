@@ -24,6 +24,6 @@ public class TableTest {
     public void resoleReturnsGroupedTableExprWithAlias() {
         Project0.Table projectTable = new Project0.Table("SELECT * FROM photo", "p");
 
-        assertEquals("(SELECT * FROM photo) p", projectTable.sql());
+        assertEquals("SELECT * FROM photo p", projectTable.sql());
     }
 }

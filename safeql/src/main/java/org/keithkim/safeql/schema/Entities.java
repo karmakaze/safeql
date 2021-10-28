@@ -31,16 +31,18 @@ public abstract class Entities<EE extends Entities, E extends Entity> extends Ar
                 whereClause = " WHERE " + cond.sql();
             }
             Query query = handle.createQuery(String.format("SELECT * FROM %s %s", table.sqlNoAlias(), whereClause));
-            for (Map.Entry<String, ?> me : cond.allBindEntries()) {
-                String name = me.getKey();
-                Object arg = me.getValue();
-                if (arg instanceof Collection) {
-                    query = query.bindList(name, arg);
-                } else {
-                    query = query.bind(name, arg);
+            if (cond != null) {
+                Set<Map.Entry<String, Object>> s = cond.allBindEntries();
+                for (Map.Entry<String, Object> me : s) {
+                    String name = me.getKey();
+                    Object arg = me.getValue();
+                    if (arg instanceof Collection) {
+                        query = query.bindList(name, arg);
+                    } else {
+                        query = query.bind(name, arg);
+                    }
                 }
             }
-
             return query.mapTo(table.entityClass).list();
         });
         return newEntities(entities);

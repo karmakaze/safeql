@@ -1,22 +1,22 @@
 package org.keithkim.safeql.expression;
 
-public abstract class TernaryExpr<T> extends Expr<T> {
-    private final Expr<T> expr1;
+public abstract class TernaryExpr<S, L, M, R> extends Expr<S> {
+    private final Expr<L> left;
     private final String operator1;
-    private final Expr<T> expr2;
+    private final Expr<M> middle;
     private final String operator2;
-    private final Expr<T> expr3;
+    private final Expr<R> right;
 
-    public TernaryExpr(Expr<T> expr1, String operator1, Expr<T> expr2, String operator2, Expr<T> expr3) {
+    public TernaryExpr(Expr<L> left, String operator1, Expr<M> middle, String operator2, Expr<R> right) {
         super(null);
-        this.expr1 = expr1;
+        this.left = left;
         this.operator1 = operator1;
-        this.expr2 = expr2;
+        this.middle = middle;
         this.operator2 = operator2;
-        this.expr3 = expr3;
+        this.right = right;
     }
 
     public String sql() {
-        return group(expr1.sql()) + " "+ operator1 + " " + group(expr2.sql()) + " "+ operator2 + " " + group(expr3.sql());
+        return sqlTerm(left) + " "+ operator1 + " " + sqlTerm(middle) + " "+ operator2 + " " + sqlTerm(right);
     }
 }

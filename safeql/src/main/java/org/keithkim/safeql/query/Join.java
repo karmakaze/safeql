@@ -7,10 +7,10 @@ import org.keithkim.safeql.schema.Entity;
 import org.keithkim.safeql.schema.Table;
 import org.keithkim.safeql.type.JoinRows;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptySet;
 import static org.keithkim.safeql.predicate.Predicates.ALL;
 
 @EqualsAndHashCode(callSuper = false)
@@ -36,7 +36,7 @@ public class Join<L extends Entity, R extends Entity> extends Expr<JoinRows<L, R
     protected final Type type;
     protected final Table left;
     protected final Table right;
-    protected final List<Equate<L, R, ?>> equates;
+    protected final List<Predicate> equates;
     protected final List<Cond2<L, R>> andWhere = new ArrayList<>();
 
     public Join(Table<L> left, Table<R> right, Equate<L, R, ?>... equates) {
@@ -108,18 +108,32 @@ public class Join<L extends Entity, R extends Entity> extends Expr<JoinRows<L, R
     public static class Cond2<L, R> {
     }
 
-    public static class Equate<L extends Entity, R extends Entity, T> extends Predicate {
+    public static class Equate<L extends Entity, R extends Entity, T> implements Predicate {
         public final Table<L>.SqlColumn<T> lCol;
         public final Table<R>.SqlColumn<T> rCol;
 
         public Equate(Table<L>.SqlColumn<T> lCol, Table<R>.SqlColumn<T> rCol) {
-            super(null);
             this.lCol = lCol;
             this.rCol = rCol;
         }
 
         public String sql() {
             return lCol.sql() +" = "+ rCol.sql();
+        }
+
+        @Override
+        public boolean isTerm() {
+            return false;
+        }
+
+        @Override
+        public Set<Map.Entry<String, Object>> allBindEntries() {
+            return emptySet();
+        }
+
+        @Override
+        public Object eval() {
+            return null;
         }
     }
 }

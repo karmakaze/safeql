@@ -2,23 +2,19 @@ package org.keithkim.safeql.expression;
 
 import com.google.common.base.Joiner;
 import lombok.EqualsAndHashCode;
-import org.keithkim.safeql.predicate.Equal;
-import org.keithkim.safeql.query.Join;
 import org.keithkim.safeql.schema.Table;
 import org.keithkim.safeql.type.UnsafeString;
 import org.keithkim.safeql.util.SequentialIdGenerator;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
 
 @EqualsAndHashCode
-public class Expr<T> {
+public class Expr<S> implements Eval, SqlScalar<S> {
     private static final Pattern NAME_PATTERN = Pattern.compile(":([A-Za-z][A-Za-z0-9_]*|_[1-9][0-9]*(?:_[1-9A-Za-z][0-9A-Za-z]*)?)");
     private static final Pattern GROUPED_NAME_PATTERN = Pattern.compile("\\(*:([a-z][A-Za-z_0-9]*)\\)*");
     private static final Pattern TERM_PATTERN = Pattern.compile(":?['A-Za-z0-9][:.'A-Za-z0-9_]*");
@@ -27,24 +23,24 @@ public class Expr<T> {
     protected static final SequentialIdGenerator objectIdGenerator = new SequentialIdGenerator();
 
     @EqualsAndHashCode.Exclude
-    final String objectId;
+    public final String objectId;
 
     @EqualsAndHashCode.Exclude
     private volatile int varId;
 
     volatile String sql;
     volatile boolean isTerm;
-    final SortedMap<String, Object> localBinds;
+    final LinkedHashMap<String, Object> localBinds;
 
-    public static <T> Expr<T> expr(String string) {
+    public static <S> Expr<S> expr(String string) {
         return new Expr<>(string);
     }
 
-    public static <T> Expr<T> expr(String sql, Object... values) {
+    public static <S> Expr<S> expr(String sql, Object... values) {
         return expr(sql, false, asList(values));
     }
 
-    public static <T> Expr<T> expr(String sql, boolean isTerm, List<Object> values) {
+    public static <S> Expr<S> expr(String sql, boolean isTerm, List<Object> values) {
         SortedMap<String, Object> bindings = new TreeMap<>();
         int i = 0;
         for (Object value : values) {
@@ -55,8 +51,8 @@ public class Expr<T> {
         return new Expr<>(sql, bindings.entrySet(), true);
     }
 
-    public static <T> Expr<T> expr(String sql, Map<String, Object> localBinds) {
-        return new Expr<T>(sql, localBinds.entrySet(), true);
+    public static <S> Expr<S> expr(String sql, Map<String, Object> localBinds) {
+        return new Expr<S>(sql, localBinds.entrySet(), true);
     }
 
     public Expr(String sql) {
@@ -93,7 +89,7 @@ public class Expr<T> {
         this.sql = sql;
     }
 
-    protected static <T> String expandTermSql(Expr<T> expr) {
+    protected static <S> String expandTermSql(Expr<S> expr) {
         return expr.isTerm() ? expr.sql() : "("+expr.sql()+")";
     }
 
@@ -101,8 +97,8 @@ public class Expr<T> {
         return isTerm;
     }
 
-    private SortedMap<String, Object> parseSqlVars(String sql) {
-        SortedMap<String, Object> binds = new TreeMap<>();
+    private LinkedHashMap<String, Object> parseSqlVars(String sql) {
+        LinkedHashMap<String, Object> binds = new LinkedHashMap<>();
         if (sql != null) {
             Matcher matcher = NAME_PATTERN.matcher(sql);
             while (matcher.find()) {
@@ -117,12 +113,12 @@ public class Expr<T> {
     }
 
     public void bind(String name, Object value) {
-        SortedMap<String, Object> localBinds = localBinds();
+        LinkedHashMap<String, Object> localBinds = localBinds();
         if ("?".equals(name)) {
             int i = sql.indexOf('?');
             if (i >= 0) {
                 if (value instanceof Table) {
-                    sql = sql.substring(0, i) + ((Table)value).sql() + sql.substring(i + 1);
+                    sql = sql.substring(0, i) + ((Table) value).sqlTerm() + sql.substring(i + 1);
                 } else {
                     name = "_" + (++varId) + "_" + objectId;
                     if (sql.length() == i + 1 || " ),".indexOf(sql.charAt(i + 1)) >= 0) {
@@ -136,30 +132,30 @@ public class Expr<T> {
                 System.err.printf("Attempt positional binding without '?' in SQL: %s\n", sql);
             }
         } else if (localBinds.containsKey(name)) {
-            Object old = bindTo(localBinds, name, value);
-            if (old != null) {
-                System.err.printf("Rebinding of name '%s' in SQL: %s\n", name, sql);
-            }
+            localBinds.remove(name);
+            String newName = name+"_"+objectId;
+            sql = sql.replaceAll(":"+name+"\\b", ":"+newName);
+            bindTo(localBinds, newName, value);
         } else {
             System.err.printf("Attempt to bind name '%s' not present in SQL: %s\n", name, sql);
         }
     }
 
-//    protected Expr<T> bindLocal(Object value) {
+//    protected Expr<S> bindLocal(Object value) {
 //        return bindLocal("?", value);
 //    }
 
-//    protected Expr<T> bindLocal(List<Object> values) {
+//    protected Expr<S> bindLocal(List<Object> values) {
 //        values.forEach(value -> bindLocal("?", value));
 //        return this;
 //    }
 
-//    public Expr<T> bindLocal(Map<String, Object> localBinds) {
+//    public Expr<S> bindLocal(Map<String, Object> localBinds) {
 //        localBinds.forEach(this::bindLocal);
 //        return this;
 //    }
 
-//    public Expr<T> bindLocal(String name, Object value) {
+//    public Expr<S> bindLocal(String name, Object value) {
 //        if ("?".equals(name)) {
 //            bindLocal1(name, value);
 //        } else {
@@ -214,7 +210,7 @@ public class Expr<T> {
 //        return binds;
 //    }
 
-    public SortedMap<String, Object> localBinds() {
+    public LinkedHashMap<String, Object> localBinds() {
         return localBinds;
     }
 
@@ -251,7 +247,7 @@ public class Expr<T> {
 //        return emptyMap();
 //    }
 
-    protected Object eval() {
+    public Object eval() {
         String sql = sql();
         Matcher matcher = GROUPED_NAME_PATTERN.matcher(sql);
         if (matcher.matches()) {
@@ -261,24 +257,10 @@ public class Expr<T> {
         return null;
     }
 
-    public static String grouped(String sql) {
-        if (ONE_GROUP_PATTERN.matcher(sql).matches()) {
-            return sql;
-        }
-        return "(" + sql + ")";
-    }
-
-    public static String group(Expr<?> expr) {
-        if (expr instanceof Equal || expr instanceof Join.Equate) {
+    public static String sqlTerm(Sql expr) {
+        if (expr.isTerm()) {
             return expr.sql();
         }
-        return group(expr.sql());
-    }
-
-    public static String group(String sql) {
-        if (TERM_PATTERN.matcher(sql).matches() || ONE_GROUP_PATTERN.matcher(sql).matches()) {
-            return sql;
-        }
-        return "(" + sql + ")";
+        return "(" + expr.sql() + ")";
     }
 }

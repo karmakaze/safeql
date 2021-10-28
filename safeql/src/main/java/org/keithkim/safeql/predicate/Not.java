@@ -1,26 +1,23 @@
 package org.keithkim.safeql.predicate;
 
 import lombok.EqualsAndHashCode;
+import org.keithkim.safeql.expression.SqlScalar;
+import org.keithkim.safeql.expression.UnaryPredicate;
 
-import static org.keithkim.safeql.predicate.Predicates.FALSE;
-import static org.keithkim.safeql.predicate.Predicates.TRUE;
+import java.util.Collections;
 
 @EqualsAndHashCode(callSuper = true)
-public class Not extends Predicate {
-    private final Predicate predicate;
-
+public class Not extends UnaryPredicate<Boolean> implements Predicate {
     public Not(Predicate predicate) {
-        super("NOT");
-        this.predicate = predicate;
+        super(expandSql(predicate), "NOT", predicate, Collections.emptySet());
     }
 
-    public String sql() {
+    protected static <T> String expandSql(Predicate predicate) {
         if (predicate.isKnownFalse()) {
-            return TRUE.sql();
+            return Predicates.TRUE.sql();
+        } else if (predicate.isKnownTrue()) {
+            return Predicates.FALSE.sql();
         }
-        if (predicate.isKnownTrue()) {
-            return FALSE.sql();
-        }
-        return "NOT " + group(predicate.sql());
+        return UnaryPredicate.expandSql(null, "NOT", predicate);
     }
 }

@@ -28,9 +28,17 @@ public class Table<E extends Entity> extends Expr<E> {
         this.alias = alias;
     }
 
+    public String sqlTerm() {
+        if (isTerm()) {
+            return sql();
+        }
+        String aliasString = alias != null && !alias.isEmpty() ? " "+ alias : "";
+        return "("+ super.sql() +")"+ aliasString;
+    }
+
     public String sql() {
         if (alias != null) {
-            return group(super.sql()) +" "+ alias;
+            return super.sql() +" "+ alias;
         }
         return super.sql();
     }
@@ -83,11 +91,16 @@ public class Table<E extends Entity> extends Expr<E> {
             this.alias = alias;
         }
 
+//        public boolean isTerm() {
+//            super.isTerm();
+//            return true;
+//        }
+
         public String sql() {
             List<String> name = new ArrayList<>(2);
             name.add(Table.this.aliasOrTable());
             name.add(aliasOrColumn());
-            return group(Joiner.on(".").join(name));
+            return Joiner.on(".").join(name);
         }
 
         public String selectTerm(Map<String, ?> params) {

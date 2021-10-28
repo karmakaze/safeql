@@ -22,12 +22,12 @@ public class SelectTest {
 
     @Test
     void nestedTest() {
-        Table<Abc> subQuery1 = new Table<>(Abc.class, "SELECT 1 a, 2 b, 3 c UNION ALL SELECT 4, 5, 6", "t1");
+        Table<Abc> subQuery = new Table<>(Abc.class, "SELECT 1 a, 2 b, 3 c UNION ALL SELECT 4, 5, 6", "t1");
 
-        Table<Account0> subQuery2 = new Table<>(Account0.class, "SELECT * FROM ?", "t2");
-        subQuery2.bind("?", subQuery1);
+        Table<Account0> query = new Table<>(Account0.class, "SELECT * FROM ?", "t2");
+        query.bind("?", subQuery);
 
-        Select<Account0> selectFromT2 = new Select(subQuery2);
+        Select<Account0> selectFromT2 = new Select(query);
 
         assertEquals("SELECT t2.* FROM (SELECT * FROM (SELECT 1 a, 2 b, 3 c UNION ALL SELECT 4, 5, 6) t1) t2",
                 selectFromT2.sql());

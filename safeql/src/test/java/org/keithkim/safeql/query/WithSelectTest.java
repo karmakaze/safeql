@@ -2,6 +2,7 @@ package org.keithkim.safeql.query;
 
 import com.google.common.base.Joiner;
 import org.junit.jupiter.api.Test;
+import org.keithkim.safeql.schema.Entity;
 import org.keithkim.safeql.schema.Table;
 import org.keithkim.safeql.test.Account0;
 import org.keithkim.safeql.test.Project0;
@@ -32,14 +33,20 @@ class WithSelectTest {
         Table<Account0> fizzTable = new Table<>(Account0.class, "SELECT * FROM account WHERE MOD(id, 3) = 0", "fizz");
         Table<Project0> buzzTable = new Table<>(Project0.class, "SELECT * FROM project WHERE MOD(id, 5) = 0", "buzz");
         With<Account0> withAccount = new With<>(fizzTable, buzzTable);
-        WithSelect<Account0> select = new WithSelect<>(withAccount, new Table<>(Account0.class, "fizz f JOIN buzz b ON MOD(f.id / 3, 7)  == MOD(b.id / 5, 7)"));
+
+        Account0.Table accountTable = new Account0.Table("fizz", "f");
+        Project0.Table projectTable = new Project0.Table("buzz", "b");
+        Join joinQuery = new Join(accountTable, accountTable.idCol, projectTable, projectTable.accountIdCol);;
+        Table fizzAndBuzz = new Table(Account0.class, joinQuery.sql());
+
+        WithSelect<Account0> select = new WithSelect<>(withAccount, fizzAndBuzz);
 
         String expected = Joiner.on("\n").join(asList(
                 "WITH fizz AS (SELECT * FROM account WHERE MOD(id, 3) = 0",
                 "     ),",
                 "     buzz AS (SELECT * FROM project WHERE MOD(id, 5) = 0",
                 "     )",
-                "SELECT * FROM fizz f JOIN buzz b ON MOD(f.id / 3, 7)  == MOD(b.id / 5, 7)"));
+                "SELECT * FROM (fizz f JOIN buzz b ON f.id = b.account_id)"));
         assertEquals(expected, select.sql());
     }
 }
