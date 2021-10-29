@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 import org.keithkim.safeql.schema.Table;
 import org.keithkim.safeql.type.UnsafeString;
 import org.keithkim.safeql.util.SequentialIdGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -15,10 +17,10 @@ import static java.util.Collections.emptySet;
 
 @EqualsAndHashCode
 public class Expr<S> implements Eval, SqlScalar<S> {
+    private static final Logger log = LoggerFactory.getLogger(Expr.class);
     private static final Pattern NAME_PATTERN = Pattern.compile(":([A-Za-z][A-Za-z0-9_]*|_[1-9][0-9]*(?:_[1-9A-Za-z][0-9A-Za-z]*)?)");
     private static final Pattern GROUPED_NAME_PATTERN = Pattern.compile("\\(*:([a-z][A-Za-z_0-9]*)\\)*");
     private static final Pattern TERM_PATTERN = Pattern.compile(":?['A-Za-z0-9][:.'A-Za-z0-9_]*");
-    private static final Pattern ONE_GROUP_PATTERN = Pattern.compile("[(][^()]+[)]");
 
     protected static final SequentialIdGenerator objectIdGenerator = new SequentialIdGenerator();
 
@@ -82,7 +84,7 @@ public class Expr<S> implements Eval, SqlScalar<S> {
                     }
                     localBinds.put(name, me.getValue());
                 } else {
-                    System.err.printf("No bind name '%s' in SQL: %s\n", name, sql);
+                    log.warn("Attempt to bind name '{}' not present in SQL: {}", name, sql);
                 }
             }
         }
@@ -129,7 +131,7 @@ public class Expr<S> implements Eval, SqlScalar<S> {
                     bindTo(localBinds, name, value);
                 }
             } else {
-                System.err.printf("Attempt positional binding without '?' in SQL: %s\n", sql);
+                log.warn("Attempt to bind positional '?' not present in SQL: {}", sql);
             }
         } else if (localBinds.containsKey(name)) {
             localBinds.remove(name);
@@ -137,7 +139,7 @@ public class Expr<S> implements Eval, SqlScalar<S> {
             sql = sql.replaceAll(":"+name+"\\b", ":"+newName);
             bindTo(localBinds, newName, value);
         } else {
-            System.err.printf("Attempt to bind name '%s' not present in SQL: %s\n", name, sql);
+            log.warn("Attempt to bind name '{}' not present in SQL: {}", name, sql);
         }
     }
 
