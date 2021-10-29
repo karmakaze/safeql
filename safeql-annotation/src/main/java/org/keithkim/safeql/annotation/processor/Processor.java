@@ -39,7 +39,6 @@ public class Processor extends AbstractProcessor {
         }
 
         public void logError(String message, Element e) {
-            System.err.println("ERROR: '" + message + "' " + e);
             messager.printMessage(Diagnostic.Kind.ERROR, message, e);
         }
     }
