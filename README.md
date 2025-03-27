@@ -1,6 +1,6 @@
 ## Why was SafeQL created?
 
-SafeQL arose from the dissatisfaction in the limitations of existing ORM frameworks and query builder libraries. Often what works well in the beginning falls aport at scale. Painful examples of this are non-obvious N+1 queries that creep in and garbage collection pressure that eats memory and kills performance. Avoiding N+1 queries while simultaneously controlling eager/lazy loading is challenging and inefficient at best. Other frameworks are good at making simple things easier. They don't handle complex cases where it would be most beneficial and requires error-prone manual work.
+SafeQL arose from the dissatisfaction in the limitations of existing ORM frameworks and query builder libraries. Often what works well in the beginning falls apart at scale. Painful examples of this are non-obvious N+1 queries that creep in and garbage collection pressure that eats memory and kills performance. Avoiding N+1 queries while simultaneously controlling eager/lazy loading is challenging and inefficient at best. Other frameworks are good at making simple things easier. They don't handle complex cases where it would be most beneficial and requires error-prone manual work.
 
 SafeQL is the encapsulation of doing these complex and all-too-common things in a developer friendly and operationally safe way.
 
@@ -45,7 +45,7 @@ Accounts accounts = Accounts.where("id > :min_id", mapOf("min_id", 1000)).get();
 
 Projects projects = accounts.loadProjects("updated_at >= ?", Instant.now().minusDays(30)).get();
 ```
-The `Accounts` and `Projects` types are subclasses of List<Account> and List<Project> with additional methods.
+The `Accounts` and `Projects` types are subclasses of List&lt;Account&gt; and List&lt;Project&gt; with additional methods.
 
 The `projects` returned value of `loadProjects` can be discarded as each account in `accounts` aleady has its projects associated upon loading.
 
